@@ -14,9 +14,7 @@ const HomeBtn = ({ target, icon, label }: any) => {
         style={styles.button}
       >
         <Ionicons name={icon} size={24} color={COLORS.TXT} />
-        <Text style={styles.buttonText}>{label}</Text>
       </TouchableOpacity>
-      <Text>HomeBtn</Text>
     </View>
   );
 };
@@ -30,8 +28,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: COLORS.LMNT,
-    width: 104,
-    height: 104,
+    width: 64,
+    height: 64,
     padding: 8,
     borderRadius: 6,
   },

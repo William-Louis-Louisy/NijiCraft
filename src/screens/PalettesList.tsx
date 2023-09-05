@@ -6,10 +6,11 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IPalette } from "../types/Palette.types";
 import { COLORS } from "../constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
+import { IPalette } from "../types/Palette.types";
 import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PalettesList = () => {
   const [palettesList, setPalettesList] = useState<IPalette[]>([]);
@@ -49,66 +50,58 @@ const PalettesList = () => {
     }
   };
 
-  console.log(palettesList);
-
   return (
-    <View style={styles.container}>
-      <Text>PalettesList</Text>
-      <ScrollView style={styles.listContainer}>
-        {palettesList.map((palette) => {
-          return (
-            <View key={palette.id} style={styles.paletteContainer}>
-              <View>
-                <Text style={styles.paletteName}>{palette.name}</Text>
-                <TouchableOpacity
-                  onPress={() => deletePalette(palette.id)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: 32,
-                    height: 32,
-                    backgroundColor: COLORS.LMNT,
-                  }}
-                >
-                  <Text style={{ color: COLORS.TXT }}>X</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.colorsContainer}>
-                {palette.colors.map((color, index) => {
-                  const colorWidth = 100 / palette.colors.length;
-                  return (
-                    <View
-                      key={index}
-                      style={{
-                        backgroundColor: color,
-                        width: `${colorWidth}%`,
-                        height: 64,
-                      }}
-                    ></View>
-                  );
-                })}
-              </View>
+    <ScrollView style={styles.listContainer}>
+      {palettesList.map((palette) => {
+        return (
+          <View key={palette.id} style={styles.paletteContainer}>
+            <View style={styles.header}>
+              <Text style={styles.paletteName}>{palette.name}</Text>
+              <TouchableOpacity
+                onPress={() => deletePalette(palette.id)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Ionicons
+                  name="ellipsis-vertical"
+                  size={20}
+                  color={COLORS.TXT}
+                />
+              </TouchableOpacity>
             </View>
-          );
-        })}
-      </ScrollView>
-    </View>
+
+            <View style={styles.colorsContainer}>
+              {palette.colors.map((color, index) => {
+                const colorWidth = 100 / palette.colors.length;
+                return (
+                  <View
+                    key={index}
+                    style={{
+                      backgroundColor: color.hex,
+                      width: `${colorWidth}%`,
+                      height: 64,
+                    }}
+                  ></View>
+                );
+              })}
+            </View>
+          </View>
+        );
+      })}
+    </ScrollView>
   );
 };
 
 export default PalettesList;
 
 const styles = StyleSheet.create({
-  container: {
+  listContainer: {
     flex: 1,
-    alignItems: "center",
     backgroundColor: COLORS.BG,
     position: "relative",
-  },
-
-  listContainer: {
     width: "100%",
     height: "100%",
     display: "flex",
@@ -121,6 +114,15 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.LMNT,
     display: "flex",
     flexDirection: "column",
+    marginBottom: 16,
+  },
+
+  header: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     padding: 16,
   },
 

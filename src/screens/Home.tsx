@@ -6,11 +6,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const screensList = [
   {
-    icon: "home",
-    label: "Home",
-    target: "Home",
-  },
-  {
     icon: "list",
     label: "Palettes list",
     target: "Palettes list",
@@ -51,8 +46,6 @@ const Home = () => {
           );
         })}
       </View>
-
-      <Button title="Clear AsyncStorage" onPress={clearAsyncStorage} />
     </View>
   );
 };

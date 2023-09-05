@@ -1,9 +1,8 @@
 import React from "react";
+import { COLORS } from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { IPaletteColorItemProps } from "../types/PaletteColorItemProps.types";
-import { COLORS } from "../constants/Colors";
-import { hexColor } from "../utils/PaletteFunctions";
 
 const PaletteColorItem = ({
   color,
@@ -19,7 +18,7 @@ const PaletteColorItem = ({
       }}
     >
       <View style={styles.container}>
-        <Text style={styles.colorName}>{hexColor(color)}</Text>
+        <Text style={styles.colorName}>{color}</Text>
         <View>
           <TouchableOpacity style={styles.btn} onPress={() => onEdit(color)}>
             <Ionicons name="create-outline" size={20} color={COLORS.TXT} />

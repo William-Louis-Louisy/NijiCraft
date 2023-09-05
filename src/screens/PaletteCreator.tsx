@@ -2,61 +2,64 @@ import {
   Text,
   View,
   Button,
+  Modal,
   TextInput,
   ScrollView,
   StyleSheet,
 } from "react-native";
+import ColorPicker, {
+  Panel1,
+  HueSlider,
+  OpacitySlider,
+} from "reanimated-color-picker";
+import {
+  generateObjectId,
+  determineTextColor,
+} from "../utils/PaletteFunctions";
 import { useState, useEffect } from "react";
 import { COLORS } from "../constants/Colors";
-import { IPalette } from "../types/Palette.types";
-import Slider from "@react-native-community/slider";
+import { Ionicons } from "@expo/vector-icons";
+import { IColor, IPalette } from "../types/Palette.types";
 import PaletteColorItem from "../components/PaletteColorItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  determineTextColor,
-  generateObjectId,
-  hexColor,
-} from "../utils/PaletteFunctions";
+
+const defaultColor = {
+  hex: "#000000",
+  rgb: "rgb(0, 0, 0)",
+  rgba: "rgba(0, 0, 0, 1)",
+  hsv: "hsv(0, 0, 0)",
+  hsva: "hsva(0, 0, 0, 1)",
+  hsl: "hsl(0, 0, 0)",
+  hsla: "hsla(0, 0, 0, 1)",
+};
+
+const defaultPalette = {
+  id: generateObjectId(),
+  name: "My palette",
+  colors: [],
+};
 
 const PaletteCreator = () => {
-  const [rgba, setRgba] = useState({
-    r: 0,
-    g: 0,
-    b: 0,
-    a: 1,
-  });
-  const [selectedColor, setSelectedColor] = useState<string>(
-    `rgb(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`
-  );
-  const [currentPalette, setCurrentPalette] = useState<IPalette>({
-    id: generateObjectId(),
-    name: "My palette",
-    colors: [],
-  });
+  const [modalVisible, setModalVisible] = useState<boolean>(true);
+  const [selectedColor, setSelectedColor] = useState<IColor>(defaultColor);
+  const [currentPalette, setCurrentPalette] =
+    useState<IPalette>(defaultPalette);
 
-  const updateSelectedColor = () => {
-    setSelectedColor(`rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`);
+  const onSelectColor = ({ hex, rgb, rgba, hsv, hsva, hsl, hsla }: any) => {
+    setSelectedColor({ hex, rgb, rgba, hsv, hsva, hsl, hsla });
   };
-
-  // Reset the color picker to black
-  const resetColorPicker = () => {
-    setRgba({ r: 0, g: 0, b: 0, a: 1 });
-    setSelectedColor(`rgba(0, 0, 0, 1)`);
-  };
-
   const addColor = () => {
     if (currentPalette.colors.length < 12) {
       setCurrentPalette({
         ...currentPalette,
         colors: [...currentPalette.colors, selectedColor],
       });
-      resetColorPicker();
     } else {
       alert("You have reached the maximum number of colors (12).");
     }
   };
 
-  const editColor = (oldColor: string, newColor: string) => {
+  const editColor = (oldColor: IColor, newColor: IColor) => {
     const newColors = currentPalette.colors.map((color) =>
       color === oldColor ? newColor : color
     );
@@ -66,7 +69,7 @@ const PaletteCreator = () => {
     });
   };
 
-  const deleteColor = (colorToDelete: string) => {
+  const deleteColor = (colorToDelete: IColor) => {
     const newColors = currentPalette.colors.filter(
       (color) => color !== colorToDelete
     );
@@ -77,7 +80,6 @@ const PaletteCreator = () => {
   };
 
   // SAVE PALETTE TO ASYNC STORAGE
-
   // Save after every change to currentPalette
   useEffect(() => {
     const onChangeSavePalettes = async () => {
@@ -146,7 +148,7 @@ const PaletteCreator = () => {
         name: "My palette",
         colors: [],
       });
-      resetColorPicker();
+      // resetColorPicker();
       alert("Palette saved !");
     } catch (error) {
       console.error("Erreur lors de la sauvegarde des palettes :", error);
@@ -170,142 +172,52 @@ const PaletteCreator = () => {
         {currentPalette.colors.map((color, index) => (
           <PaletteColorItem
             key={index}
-            color={color}
-            onEdit={editColor}
-            onDelete={deleteColor}
+            color={color.hex}
+            onEdit={() => console.log("yeah")}
+            onDelete={() => console.log("yeah")}
           />
         ))}
 
         <View
           style={{
-            backgroundColor: selectedColor,
+            backgroundColor: selectedColor.hex,
             height: 64,
             width: "100%",
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            paddingLeft: 16,
+            paddingHorizontal: 16,
           }}
         >
           <Text
             style={{
-              color: determineTextColor(
-                `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`
-              ),
+              color: determineTextColor(selectedColor.rgba),
+              fontSize: 16,
+              fontWeight: "bold",
             }}
           >
-            {hexColor(selectedColor)}
+            {selectedColor.hex}
           </Text>
+
+          <Ionicons
+            name="ellipse"
+            size={16}
+            color={determineTextColor(selectedColor.rgba)}
+          />
         </View>
       </ScrollView>
 
       <View style={styles.colorPicker}>
-        {/* COLOR PICKER */}
-
-        <View style={styles.colorPickerRow}>
-          <View style={styles.colorPickerLabelRow}>
-            <Text style={styles.colorPickerLabel}>red :</Text>
-            <TextInput
-              style={styles.colorPickerInput}
-              inputMode="numeric"
-              maxLength={3}
-            >
-              {rgba.r}
-            </TextInput>
-          </View>
-          <Slider
-            step={1}
-            value={rgba.r}
-            thumbTintColor={COLORS.TXT}
-            minimumTrackTintColor={"#FF0000"}
-            maximumTrackTintColor={"#FF0000"}
-            minimumValue={0}
-            maximumValue={255}
-            onValueChange={(value) => {
-              setRgba({ ...rgba, r: value });
-              updateSelectedColor();
-            }}
-          />
-        </View>
-
-        <View style={styles.colorPickerRow}>
-          <View style={styles.colorPickerLabelRow}>
-            <Text style={styles.colorPickerLabel}>green :</Text>
-            <TextInput
-              style={styles.colorPickerInput}
-              inputMode="numeric"
-              maxLength={3}
-            >
-              {rgba.g}
-            </TextInput>
-          </View>
-          <Slider
-            step={1}
-            value={rgba.g}
-            thumbTintColor={COLORS.TXT}
-            minimumTrackTintColor={"#00FF00"}
-            maximumTrackTintColor={"#00FF00"}
-            minimumValue={0}
-            maximumValue={255}
-            onValueChange={(value) => {
-              setRgba({ ...rgba, g: value });
-              updateSelectedColor();
-            }}
-          />
-        </View>
-
-        <View style={styles.colorPickerRow}>
-          <View style={styles.colorPickerLabelRow}>
-            <Text style={styles.colorPickerLabel}>blue :</Text>
-            <TextInput
-              style={styles.colorPickerInput}
-              inputMode="numeric"
-              maxLength={3}
-            >
-              {rgba.b}
-            </TextInput>
-          </View>
-          <Slider
-            step={1}
-            value={rgba.b}
-            thumbTintColor={COLORS.TXT}
-            minimumTrackTintColor={"#0000FF"}
-            maximumTrackTintColor={"#0000FF"}
-            minimumValue={0}
-            maximumValue={255}
-            onValueChange={(value) => {
-              setRgba({ ...rgba, b: value });
-              updateSelectedColor();
-            }}
-          />
-        </View>
-
-        <View style={styles.colorPickerRow}>
-          <View style={styles.colorPickerLabelRow}>
-            <Text style={styles.colorPickerLabel}>opacity :</Text>
-            <TextInput
-              style={styles.colorPickerInput}
-              inputMode="numeric"
-              maxLength={4}
-            >
-              {rgba.a}
-            </TextInput>
-          </View>
-          <Slider
-            step={0.01}
-            value={rgba.a}
-            thumbTintColor={COLORS.TXT}
-            minimumTrackTintColor={"#FFF"}
-            maximumTrackTintColor={"#FFF"}
-            minimumValue={0}
-            maximumValue={1}
-            onValueChange={(value) => {
-              setRgba({ ...rgba, a: value });
-              updateSelectedColor();
-            }}
-          />
-        </View>
+        <ColorPicker
+          style={{ width: "100%" }}
+          value={"red"}
+          onComplete={onSelectColor}
+        >
+          <Panel1 style={{ width: "100%", height: 128 }} />
+          <HueSlider style={{ marginTop: 16 }} />
+          <OpacitySlider style={{ marginTop: 16 }} />
+        </ColorPicker>
 
         <View style={styles.buttonRow}>
           <Button title="Add Color" onPress={() => addColor()} />
@@ -371,37 +283,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
     padding: 16,
     backgroundColor: COLORS.LMNT,
-  },
-
-  colorPickerRow: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-  },
-
-  colorPickerLabelRow: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingRight: 16,
-    paddingLeft: 8,
-  },
-
-  colorPickerLabel: {
-    fontSize: 14,
-    color: COLORS.TXT,
-  },
-
-  colorPickerInput: {
-    height: 24,
-    width: 48,
-    borderRadius: 6,
-    borderColor: "gray",
-    borderWidth: 1,
-    color: COLORS.TXT,
-    paddingLeft: 8,
   },
 
   buttonRow: {
