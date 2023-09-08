@@ -13,3 +13,7 @@ export interface IPalette {
   name: string;
   colors: IColor[];
 }
+
+export interface ICurrentColorItemProps {
+  selectedColor: IColor;
+}

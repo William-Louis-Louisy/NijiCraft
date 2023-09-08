@@ -1,5 +1,3 @@
-import { IPalette } from "../types/Palette.types";
-
 // Generate a random ObjectID
 export const generateObjectId = () => {
   const timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
@@ -25,56 +23,6 @@ export const determineTextColor = (backgroundColor: string) => {
   return brightness > 155 ? "#000000" : "#FFFFFF";
 };
 
-export const updateSelectedColor = (rgba: {
-  r: number;
-  g: number;
-  b: number;
-  a: number;
-}) => {
-  return `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
-};
-
-export const resetColorPicker = () => {
-  return { r: 0, g: 0, b: 0, a: 1 };
-};
-
-export const addColor = (currentPalette: IPalette, selectedColor: string) => {
-  if (currentPalette.colors.length < 12) {
-    return {
-      ...currentPalette,
-      colors: [...currentPalette.colors, selectedColor],
-    };
-  }
-  return currentPalette;
-};
-
-export const editColor = (
-  currentPalette: IPalette,
-  oldColor: string,
-  newColor: string
-) => {
-  const newColors = currentPalette.colors.map((color) =>
-    color === oldColor ? newColor : color
-  );
-  return {
-    ...currentPalette,
-    colors: newColors,
-  };
-};
-
-export const deleteColor = (
-  currentPalette: IPalette,
-  colorToDelete: string
-) => {
-  const newColors = currentPalette.colors.filter(
-    (color) => color !== colorToDelete
-  );
-  return {
-    ...currentPalette,
-    colors: newColors,
-  };
-};
-
 // Generate a random number between 0 and 255
 export const randomColor = () => Math.floor(Math.random() * 256);
 
@@ -88,3 +36,77 @@ export const hexColor = (color: string) => {
   const hex = ((r << 16) | (g << 8) | b).toString(16);
   return `#${hex}`;
 };
+
+// Convertit une couleur hexadécimale en RGB
+export function hexToRgb(hex: string) {
+  const bigint = parseInt(hex.substring(1), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+
+  return { r, g, b };
+}
+
+export function rgbToHsl(r: number, g: number, b: number) {
+  r /= 255;
+  g /= 255;
+  b /= 255;
+
+  let h = 0,
+    s = 0,
+    l = 0; // Initialisation ici
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+
+  return { h: h * 360, s: s * 100, l: l * 100 };
+}
+
+export function rgbToHsv(r: number, g: number, b: number) {
+  r /= 255;
+  g /= 255;
+  b /= 255;
+
+  let h = 0,
+    s = 0,
+    v = 0; // Initialisation ici
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  v = max;
+
+  if (max !== min) {
+    const d = max - min;
+    s = d / max;
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+
+  return { h: h * 360, s: s * 100, v: v * 100 };
+}

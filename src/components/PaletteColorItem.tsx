@@ -18,7 +18,7 @@ const PaletteColorItem = ({
       }}
     >
       <View style={styles.container}>
-        <Text style={styles.colorName}>{color}</Text>
+        <Text style={styles.colorName}>{color.toUpperCase()}</Text>
         <View>
           <TouchableOpacity style={styles.btn} onPress={() => onEdit(color)}>
             <Ionicons name="create-outline" size={20} color={COLORS.TXT} />

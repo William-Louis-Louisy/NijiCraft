@@ -1,26 +1,27 @@
 import {
   Text,
   View,
-  Button,
-  Modal,
   TextInput,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
-import ColorPicker, {
-  Panel1,
-  HueSlider,
-  OpacitySlider,
-} from "reanimated-color-picker";
 import {
+  hexToRgb,
+  rgbToHsl,
+  rgbToHsv,
   generateObjectId,
-  determineTextColor,
 } from "../utils/PaletteFunctions";
-import { useState, useEffect } from "react";
+import { trad } from "../lang/traduction";
 import { COLORS } from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import { AppContext } from "../contexts/AppContext";
+import PickerModal from "../components/PickerModal";
+import { ColorPickerRef } from "reanimated-color-picker";
 import { IColor, IPalette } from "../types/Palette.types";
 import PaletteColorItem from "../components/PaletteColorItem";
+import CurrentColorItem from "../components/CurrentColorItem";
+import { useState, useEffect, useRef, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const defaultColor = {
@@ -40,12 +41,18 @@ const defaultPalette = {
 };
 
 const PaletteCreator = () => {
-  const [modalVisible, setModalVisible] = useState<boolean>(true);
-  const [selectedColor, setSelectedColor] = useState<IColor>(defaultColor);
+  const { lang } = useContext(AppContext);
   const [currentPalette, setCurrentPalette] =
     useState<IPalette>(defaultPalette);
+  const [pickerType, setPickerType] = useState<string>("picker");
+  const [modalVisible, setModalVisible] = useState<boolean>(true);
+  const [selectedColorHex, setSelectedColorHex] = useState("#FF0000");
+  const [selectedColor, setSelectedColor] = useState<IColor>(defaultColor);
+  const [inputValue, setInputValue] = useState<string>(selectedColorHex);
+  const pickerRef = useRef<ColorPickerRef>(null);
 
   const onSelectColor = ({ hex, rgb, rgba, hsv, hsva, hsl, hsla }: any) => {
+    setSelectedColorHex(hex);
     setSelectedColor({ hex, rgb, rgba, hsv, hsva, hsl, hsla });
   };
   const addColor = () => {
@@ -59,16 +66,6 @@ const PaletteCreator = () => {
     }
   };
 
-  const editColor = (oldColor: IColor, newColor: IColor) => {
-    const newColors = currentPalette.colors.map((color) =>
-      color === oldColor ? newColor : color
-    );
-    setCurrentPalette({
-      ...currentPalette,
-      colors: newColors,
-    });
-  };
-
   const deleteColor = (colorToDelete: IColor) => {
     const newColors = currentPalette.colors.filter(
       (color) => color !== colorToDelete
@@ -79,7 +76,39 @@ const PaletteCreator = () => {
     });
   };
 
-  // SAVE PALETTE TO ASYNC STORAGE
+  const handleHexInputEndEditing = () => {
+    const isValidHex = /^#([0-9A-Fa-f]{3,4}|[0-9A-Fa-f]{6,8})$/.test(
+      inputValue
+    );
+    if (isValidHex) {
+      setSelectedColorHex(inputValue);
+
+      const rgb = hexToRgb(inputValue);
+      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+      const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
+      setSelectedColor({
+        hex: inputValue,
+        rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
+        rgba: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`,
+        hsl: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
+        hsla: `hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, 1)`,
+        hsv: `hsv(${hsv.h}, ${hsv.s}%, ${hsv.v}%)`,
+        hsva: `hsva(${hsv.h}, ${hsv.s}%, ${hsv.v}%, 1)`,
+      });
+
+      if (pickerRef.current) {
+        pickerRef.current.setColor(inputValue);
+      }
+    } else {
+      setInputValue(selectedColorHex);
+    }
+  };
+
+  // Reset palette
+  const resetPalette = () => {
+    setCurrentPalette(defaultPalette);
+  };
+
   // Save after every change to currentPalette
   useEffect(() => {
     const onChangeSavePalettes = async () => {
@@ -114,117 +143,90 @@ const PaletteCreator = () => {
     onChangeSavePalettes();
   }, [currentPalette]);
 
-  // Save, reset and redirect to PalettesList on save button press
-  const savePalette = async () => {
-    try {
-      if (currentPalette.colors.length === 0) {
-        // Check if there are colors in the palette
-        alert(
-          "Veuillez ajouter des couleurs à votre palette avant de sauvegarder !"
-        );
-        return;
-      }
-
-      const palettes = await AsyncStorage.getItem("palettes");
-      const parsedPalettes = palettes ? JSON.parse(palettes) : [];
-      const palettesList = Array.isArray(parsedPalettes) ? parsedPalettes : [];
-
-      // Check if the currentPalette already exists in the storage
-      const existingIndex = palettesList.findIndex(
-        (p) => p.id === currentPalette.id
-      );
-
-      if (existingIndex !== -1) {
-        // Update the existing palette
-        palettesList[existingIndex] = currentPalette;
-      } else {
-        // Add the new palette
-        palettesList.push(currentPalette);
-      }
-
-      await AsyncStorage.setItem("palettes", JSON.stringify(palettesList));
-      setCurrentPalette({
-        id: generateObjectId(),
-        name: "My palette",
-        colors: [],
-      });
-      // resetColorPicker();
-      alert("Palette saved !");
-    } catch (error) {
-      console.error("Erreur lors de la sauvegarde des palettes :", error);
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      {/* Palette Name Input */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Palette Name :</Text>
-        <TextInput
-          style={styles.nameInput}
-          value={currentPalette.name}
-          onChangeText={(text) =>
-            setCurrentPalette({ ...currentPalette, name: text })
-          }
-        />
-      </View>
-      <ScrollView style={styles.paletteContainer}>
-        {currentPalette.colors.map((color, index) => (
-          <PaletteColorItem
-            key={index}
-            color={color.hex}
-            onEdit={() => console.log("yeah")}
-            onDelete={() => console.log("yeah")}
-          />
-        ))}
-
-        <View
-          style={{
-            backgroundColor: selectedColor.hex,
-            height: 64,
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingHorizontal: 16,
-          }}
-        >
-          <Text
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ alignItems: "center" }}
+    >
+      {modalVisible ? null : (
+        <>
+          {/* Buttons */}
+          <View
             style={{
-              color: determineTextColor(selectedColor.rgba),
-              fontSize: 16,
-              fontWeight: "bold",
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              paddingHorizontal: 16,
+              marginTop: 24,
+              gap: 8,
             }}
           >
-            {selectedColor.hex}
-          </Text>
+            {/* RESET */}
+            <TouchableOpacity style={styles.btn} onPress={() => resetPalette()}>
+              <Ionicons name="reload-outline" size={16} color={COLORS.TXT} />
+              <Text style={{ color: COLORS.TXT }}>
+                {trad[lang].paletteCreator.reset}
+              </Text>
+            </TouchableOpacity>
+            {/* SHOW PICKER */}
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => setModalVisible(true)}
+            >
+              <Ionicons name="eye" size={16} color={COLORS.TXT} />
+              <Text style={{ color: COLORS.TXT }}>
+                {trad[lang].paletteCreator.picker}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-          <Ionicons
-            name="ellipse"
-            size={16}
-            color={determineTextColor(selectedColor.rgba)}
-          />
-        </View>
-      </ScrollView>
+          {/* Palette Name Input */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>
+              {trad[lang].paletteCreator.paletteName} :
+            </Text>
+            <TextInput
+              style={styles.nameInput}
+              value={currentPalette.name}
+              onChangeText={(text) =>
+                setCurrentPalette({ ...currentPalette, name: text })
+              }
+            />
+          </View>
+        </>
+      )}
 
-      <View style={styles.colorPicker}>
-        <ColorPicker
-          style={{ width: "100%" }}
-          value={"red"}
-          onComplete={onSelectColor}
-        >
-          <Panel1 style={{ width: "100%", height: 128 }} />
-          <HueSlider style={{ marginTop: 16 }} />
-          <OpacitySlider style={{ marginTop: 16 }} />
-        </ColorPicker>
+      {/* Current Color */}
+      <CurrentColorItem selectedColor={selectedColor} />
 
-        <View style={styles.buttonRow}>
-          <Button title="Add Color" onPress={() => addColor()} />
-          <Button title="Save Palette" onPress={() => savePalette()} />
-        </View>
-      </View>
-    </View>
+      {/* Palette Colors */}
+      {currentPalette.colors.map((color, index) => (
+        <PaletteColorItem
+          key={index}
+          color={color.hex}
+          onEdit={() => console.log("yeah")}
+          onDelete={() => console.log("yeah")}
+        />
+      ))}
+
+      {/* Color Picker Modal */}
+      <PickerModal
+        lang={lang}
+        addColor={addColor}
+        pickerRef={pickerRef}
+        pickerType={pickerType}
+        inputValue={inputValue}
+        modalVisible={modalVisible}
+        setPickerType={setPickerType}
+        onSelectColor={onSelectColor}
+        setInputValue={setInputValue}
+        setModalVisible={setModalVisible}
+        selectedColorHex={selectedColorHex}
+        handleHexInputEndEditing={handleHexInputEndEditing}
+      />
+    </ScrollView>
   );
 };
 
@@ -233,9 +235,23 @@ export default PaletteCreator;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
     backgroundColor: COLORS.BG,
     position: "relative",
+  },
+
+  btn: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    backgroundColor: COLORS.LMNT,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 6,
+    color: COLORS.TXT,
   },
 
   inputContainer: {
@@ -248,7 +264,7 @@ const styles = StyleSheet.create({
   },
 
   inputLabel: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     color: COLORS.TXT,
   },
@@ -272,17 +288,7 @@ const styles = StyleSheet.create({
   paletteContainer: {
     width: "100%",
     height: "100%",
-  },
-
-  colorPicker: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 16,
-    padding: 16,
-    backgroundColor: COLORS.LMNT,
+    backgroundColor: "pink",
   },
 
   buttonRow: {
@@ -291,9 +297,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
-    paddingHorizontal: 16,
-    marginTop: 16,
-    marginBottom: 8,
+    marginTop: 24,
     gap: 8,
   },
 });
