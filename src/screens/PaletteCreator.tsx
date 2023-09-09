@@ -23,6 +23,7 @@ import PaletteColorItem from "../components/PaletteColorItem";
 import CurrentColorItem from "../components/CurrentColorItem";
 import { useState, useEffect, useRef, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getColorHarmonies } from "../utils/ColorHarmonies";
 
 const defaultColor = {
   hex: "#000000",
@@ -219,11 +220,14 @@ const PaletteCreator = () => {
         pickerType={pickerType}
         inputValue={inputValue}
         modalVisible={modalVisible}
+        selectedColor={selectedColor}
         setPickerType={setPickerType}
         onSelectColor={onSelectColor}
         setInputValue={setInputValue}
         setModalVisible={setModalVisible}
+        setSelectedColor={setSelectedColor}
         selectedColorHex={selectedColorHex}
+        setSelectedColorHex={setSelectedColorHex}
         handleHexInputEndEditing={handleHexInputEndEditing}
       />
     </ScrollView>

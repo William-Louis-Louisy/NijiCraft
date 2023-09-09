@@ -1,3 +1,11 @@
+import {
+  Text,
+  View,
+  Modal,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import ColorPicker, {
   Panel1,
   HueSlider,
@@ -8,12 +16,21 @@ import ColorPicker, {
   SaturationSlider,
   BrightnessSlider,
 } from "reanimated-color-picker";
+import { useEffect } from "react";
 import { trad } from "../lang/traduction";
 import IconBnt from "../components/IconBnt";
 import { COLORS } from "../constants/Colors";
 import BtnGroup from "../components/BtnGroup";
+import { getColorHarmonies } from "../utils/ColorHarmonies";
+import {
+  determineTextColor,
+  hexToRgb,
+  hslToHex,
+  hslToRgb,
+  rgbToHsl,
+  rgbToHsv,
+} from "../utils/PaletteFunctions";
 import { IPickerModalProps } from "../types/PickerModalProps.types";
-import { Text, View, Modal, TextInput, StyleSheet } from "react-native";
 
 const PickerModal = ({
   lang,
@@ -25,10 +42,31 @@ const PickerModal = ({
   setPickerType,
   onSelectColor,
   setInputValue,
+  selectedColor,
   setModalVisible,
+  setSelectedColor,
   selectedColorHex,
+  setSelectedColorHex,
   handleHexInputEndEditing,
 }: IPickerModalProps) => {
+  const handleHarmonyColorClick = (color: string) => {
+    setSelectedColorHex(color);
+
+    const rgb = hexToRgb(color);
+    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+    const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
+    setSelectedColor({
+      hex: color,
+      rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
+      rgba: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`,
+      hsl: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
+      hsla: `hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, 1)`,
+      hsv: `hsv(${hsv.h}, ${hsv.s}%, ${hsv.v}%)`,
+      hsva: `hsva(${hsv.h}, ${hsv.s}%, ${hsv.v}%, 1)`,
+    });
+    pickerRef.current.setColor(color);
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -140,6 +178,56 @@ const PickerModal = ({
                   {trad[lang].paletteCreator.opacity}
                 </Text>
                 <OpacitySlider />
+              </View>
+            </>
+          )}
+
+          {pickerType === "harmonies" && (
+            <>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                  gap: 8,
+                }}
+              >
+                {getColorHarmonies(selectedColor).map((harmony, index) => {
+                  return (
+                    <TouchableOpacity
+                      style={{
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      onPress={() => handleHarmonyColorClick(harmony.hex)}
+                      key={index}
+                    >
+                      <View
+                        style={{
+                          width: 96,
+                          height: 40,
+                          backgroundColor: harmony.color,
+                          borderRadius: 6,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontWeight: "bold",
+                            color: determineTextColor(harmony.rgb),
+                          }}
+                        >
+                          {harmony.hex.toUpperCase()}
+                        </Text>
+                      </View>
+                      <Text style={{ fontSize: 12, color: COLORS.TXT }}>
+                        {trad[lang].paletteCreator[harmony.name]}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
             </>
           )}

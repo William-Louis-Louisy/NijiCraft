@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { trad } from "../lang/traduction";
 import { COLORS } from "../constants/Colors";
 import { languages } from "../utils/Languages";

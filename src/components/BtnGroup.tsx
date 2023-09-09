@@ -32,12 +32,24 @@ const BtnGroup = ({ type, setType }: IBtnGroup) => {
           RGBA
         </Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         onPress={() => setType("hsva")}
-        style={[styles.btnRight, type === "hsva" ? styles.activeBtn : {}]}
+        style={[styles.btn, type === "hsva" ? styles.activeBtn : {}]}
       >
         <Text style={[styles.label, type === "hsva" ? styles.activeLabel : {}]}>
           HSVA
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => setType("harmonies")}
+        style={[styles.btnRight, type === "harmonies" ? styles.activeBtn : {}]}
+      >
+        <Text
+          style={[styles.label, type === "harmonies" ? styles.activeLabel : {}]}
+        >
+          Harms
         </Text>
       </TouchableOpacity>
     </View>

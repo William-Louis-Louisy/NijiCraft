@@ -18,6 +18,7 @@ export default function App() {
   return (
     <AppProvider>
       <StatusBar style="light" />
+
       <NavigationContainer theme={MyTheme}>
         <Routes />
       </NavigationContainer>

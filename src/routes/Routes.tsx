@@ -12,18 +12,12 @@ import { Modal } from "react-native";
 import Settings from "../components/Settings";
 import { AppContext } from "../contexts/AppContext";
 import { trad } from "../lang/traduction";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 const Tab = createBottomTabNavigator();
 
 function Routes() {
   const { lang } = useContext(AppContext);
   const [modalVisible, setModalVisible] = React.useState(false);
-  const singleTap = Gesture.Tap().onEnd((_event, success) => {
-    if (success) {
-      console.log("Single tap detected");
-    }
-  });
 
   return (
     <>

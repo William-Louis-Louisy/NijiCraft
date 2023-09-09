@@ -1,3 +1,8 @@
+// Stringify rgb color
+export const handleStringifyColor = ({ r, g, b }) => {
+  return `rgb(${r}, ${g}, ${b})`;
+};
+
 // Generate a random ObjectID
 export const generateObjectId = () => {
   const timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
@@ -109,4 +114,72 @@ export function rgbToHsv(r: number, g: number, b: number) {
   }
 
   return { h: h * 360, s: s * 100, v: v * 100 };
+}
+
+// HSL to RGB
+export function hslToRgb(hsl: string) {
+  const hslValues = hsl
+    .replace("hsl(", "")
+    .replace(")", "")
+    .split(",")
+    .map((val) => parseFloat(val.trim()));
+
+  let [h, s, l] = hslValues;
+
+  // Convertir les pourcentages en fractions
+  s = s / 100;
+  l = l / 100;
+
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+
+  let r = 0;
+  let g = 0;
+  let b = 0;
+
+  if (h < 60) {
+    r = c;
+    g = x;
+    b = 0;
+  } else if (h < 120) {
+    r = x;
+    g = c;
+    b = 0;
+  } else if (h < 180) {
+    r = 0;
+    g = c;
+    b = x;
+  } else if (h < 240) {
+    r = 0;
+    g = x;
+    b = c;
+  } else if (h < 300) {
+    r = x;
+    g = 0;
+    b = c;
+  } else {
+    r = c;
+    g = 0;
+    b = x;
+  }
+
+  r = Math.round((r + m) * 255);
+  g = Math.round((g + m) * 255);
+  b = Math.round((b + m) * 255);
+
+  return { r, g, b };
+}
+
+// RGB to HEX
+export function rgbToHex(rgb: any) {
+  const { r, g, b } = rgb;
+  const hex = ((r << 16) | (g << 8) | b).toString(16);
+  return `#${hex}`;
+}
+
+// HSL to HEX
+export function hslToHex(color: string) {
+  const rgb = hslToRgb(color);
+  return rgbToHex(rgb);
 }

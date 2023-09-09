@@ -9,6 +9,9 @@ export interface IPickerModalProps {
   onSelectColor: any;
   setInputValue: (value: string) => void;
   setModalVisible: (visible: boolean) => void;
+  selectedColor: any;
   selectedColorHex: string;
+  setSelectedColorHex: (hex: string) => void;
   handleHexInputEndEditing: any;
+  setSelectedColor: (color: any) => void;
 }
