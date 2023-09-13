@@ -21,7 +21,7 @@ const IconBnt = ({ icon, label, onClick, bgColor, size = 16 }: IIconBtn) => {
       onPress={() => onClick()}
     >
       <Ionicons name={icon as any} size={size} color={COLORS.TXT} />
-      <Text style={styles.label}>{label}</Text>
+      <Text style={{ color: COLORS.TXT, fontSize: size }}>{label}</Text>
     </TouchableOpacity>
   );
 };

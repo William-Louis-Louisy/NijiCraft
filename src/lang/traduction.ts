@@ -5,6 +5,18 @@ export const trad = {
       chooseLanguage: "Choisir la langue",
     },
 
+    constrastChecker: {
+      poem: "L'orange au bout d'un piquet\nPerforé comme une cible\nNe laisse passer que son jet\nDe clarté pour l'invisible\nQui l'entoure d'un halo.\nMais son secret est en elle.",
+      textColor: "Couleur du texte",
+      backgroundColor: "Couleur de fond",
+      constrast: "Contraste",
+      exellent: "Excellent",
+      good: "Bon",
+      acceptable: "Acceptable",
+      poor: "Mauvais",
+      veryPoor: "Très mauvais",
+    },
+
     home: {
       title: "NijiCraft, l'outil de design dans votre poche !",
       subtitle:
@@ -64,12 +76,30 @@ export const trad = {
       tetradic2: "Tétradique 2",
       tetradic3: "Tétradique 3",
     },
+
+    paletteDetails: {
+      dropDown: "Sélectionnez un code",
+      copyToClipboard: "Sélectionnez le code à copier dans le presse-papier",
+      copied: "Copié dans le presse-papier !",
+    },
   },
 
   en: {
     common: {
       settings: "Settings",
       chooseLanguage: "Choose language",
+    },
+
+    constrastChecker: {
+      poem: "The orange at the end of a stake\nPierced like a target\nLets only its jet of light pass\nFor the invisible\nSurrounding it with a halo.\nBut its secret is within.",
+      textColor: "Text color",
+      backgroundColor: "Background color",
+      constrast: "Contrast",
+      exellent: "Excellent",
+      good: "Good",
+      acceptable: "Acceptable",
+      poor: "Poor",
+      veryPoor: "Very poor",
     },
 
     home: {
@@ -129,6 +159,12 @@ export const trad = {
       tetradic1: "Tetradic 1",
       tetradic2: "Tetradic 2",
       tetradic3: "Tetradic 3",
+    },
+
+    paletteDetails: {
+      dropDown: "Select a code",
+      copyToClipboard: "Select the code to copy to clipboard",
+      copied: "Copied to clipboard!",
     },
   },
 };

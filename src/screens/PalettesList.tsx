@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,8 +11,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { IPalette } from "../types/Palette.types";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { trad } from "../lang/traduction";
+import { AppContext } from "../contexts/AppContext";
+import PaletteDetails from "./PaletteDetails";
 
-const PalettesList = () => {
+const PalettesList = ({ navigation: { navigate } }) => {
+  const { lang } = useContext(AppContext);
   const [palettesList, setPalettesList] = useState<IPalette[]>([]);
   // GET PALETTES FROM ASYNC STORAGE
   const getPalettes = async () => {
@@ -73,7 +77,15 @@ const PalettesList = () => {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.colorsContainer}>
+            <TouchableOpacity
+              onPress={() =>
+                navigate("PaletteDetails", {
+                  palette: palette,
+                  paletteName: palette.name,
+                })
+              }
+              style={styles.colorsContainer}
+            >
               {palette.colors.map((color, index) => {
                 const colorWidth = 100 / palette.colors.length;
                 return (
@@ -87,7 +99,7 @@ const PalettesList = () => {
                   ></View>
                 );
               })}
-            </View>
+            </TouchableOpacity>
           </View>
         );
       })}

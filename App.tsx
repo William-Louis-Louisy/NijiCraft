@@ -1,10 +1,11 @@
-import "react-native-gesture-handler";
 import React from "react";
+import "react-native-gesture-handler";
+import Routes from "./src/routes/Routes";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
+import Toast from "react-native-toast-message";
 import AppProvider from "./src/contexts/AppContext";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import Routes from "./src/routes/Routes";
+import { SafeAreaView } from "react-native";
 
 const MyTheme = {
   ...DefaultTheme,
@@ -16,21 +17,14 @@ const MyTheme = {
 
 export default function App() {
   return (
-    <AppProvider>
-      <StatusBar style="light" />
-
-      <NavigationContainer theme={MyTheme}>
-        <Routes />
-      </NavigationContainer>
-    </AppProvider>
+    <SafeAreaView style={{ flex: 1 }}>
+      <AppProvider>
+        <StatusBar style="light" />
+        <NavigationContainer theme={MyTheme}>
+          <Routes />
+        </NavigationContainer>
+        <Toast />
+      </AppProvider>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

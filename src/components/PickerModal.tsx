@@ -16,7 +16,6 @@ import ColorPicker, {
   SaturationSlider,
   BrightnessSlider,
 } from "reanimated-color-picker";
-import { useEffect } from "react";
 import { trad } from "../lang/traduction";
 import IconBnt from "../components/IconBnt";
 import { COLORS } from "../constants/Colors";
@@ -25,8 +24,6 @@ import { getColorHarmonies } from "../utils/ColorHarmonies";
 import {
   determineTextColor,
   hexToRgb,
-  hslToHex,
-  hslToRgb,
   rgbToHsl,
   rgbToHsv,
 } from "../utils/PaletteFunctions";
@@ -59,10 +56,18 @@ const PickerModal = ({
       hex: color,
       rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
       rgba: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)`,
-      hsl: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
-      hsla: `hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, 1)`,
-      hsv: `hsv(${hsv.h}, ${hsv.s}%, ${hsv.v}%)`,
-      hsva: `hsva(${hsv.h}, ${hsv.s}%, ${hsv.v}%, 1)`,
+      hsl: `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(
+        hsl.l
+      )}%)`,
+      hsla: `hsla(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(
+        hsl.l
+      )}%, 1)`,
+      hsv: `hsv(${Math.round(hsv.h)}, ${Math.round(hsv.s)}%, ${Math.round(
+        hsv.v
+      )}%)`,
+      hsva: `hsva(${Math.round(hsv.h)}, ${Math.round(hsv.s)}%, ${Math.round(
+        hsv.v
+      )}%, 1)`,
     });
     pickerRef.current.setColor(color);
   };

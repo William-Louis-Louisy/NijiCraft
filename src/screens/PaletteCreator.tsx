@@ -208,7 +208,7 @@ const PaletteCreator = () => {
           key={index}
           color={color.hex}
           onEdit={() => console.log("yeah")}
-          onDelete={() => console.log("yeah")}
+          onDelete={() => deleteColor(color)}
         />
       ))}
 

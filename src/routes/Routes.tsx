@@ -1,81 +1,125 @@
-import React, { useContext } from "react";
 import Home from "../screens/Home";
+import { Modal } from "react-native";
+import { trad } from "../lang/traduction";
+import React, { useContext } from "react";
+import IconBnt from "../components/IconBnt";
+import { COLORS } from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import Settings from "../components/Settings";
 import Visualizer from "../screens/Visualizer";
 import PalettesList from "../screens/PalettesList";
-import PaletteCreator from "../screens/PaletteCreator";
-import ContrastChecker from "../screens/ContrastChecker";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { COLORS } from "../constants/Colors";
-import IconBnt from "../components/IconBnt";
-import { Modal } from "react-native";
-import Settings from "../components/Settings";
 import { AppContext } from "../contexts/AppContext";
-import { trad } from "../lang/traduction";
+import PaletteCreator from "../screens/PaletteCreator";
+import PaletteDetails from "../screens/PaletteDetails";
+import ContrastChecker from "../screens/ContrastChecker";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+const MainStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function Routes() {
+  return (
+    <MainStack.Navigator
+      initialRouteName="Tabs"
+      screenOptions={{
+        headerStyle: { backgroundColor: COLORS.LMNT },
+        headerTitleStyle: { color: COLORS.TXT },
+        headerTitleAlign: "center" as "center" | "left",
+        headerBackImage: () => (
+          <Ionicons
+            name="chevron-back-outline"
+            size={24}
+            color={COLORS.TXT}
+            style={{ marginLeft: 8 }}
+          />
+        ),
+      }}
+    >
+      <MainStack.Screen
+        name="Tabs"
+        component={BottomTabs}
+        options={{ headerShown: false }}
+      />
+      <MainStack.Screen
+        name="PaletteDetails"
+        component={PaletteDetails}
+        options={({ route }: any) => ({ title: route.params.paletteName })}
+      />
+    </MainStack.Navigator>
+  );
+}
+
+function BottomTabs() {
   const { lang } = useContext(AppContext);
   const [modalVisible, setModalVisible] = React.useState(false);
 
+  const screenOptions = ({ route }) => {
+    return {
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName = "";
+        if (route.name === "Home") {
+          iconName = focused ? "home" : "home-outline";
+        } else if (route.name === "PalettesList") {
+          iconName = focused ? "list" : "list-outline";
+        } else if (route.name === "PaletteCreator") {
+          iconName = focused ? "color-palette" : "color-palette-outline";
+        } else if (route.name === "ContrastChecker") {
+          iconName = focused ? "contrast" : "contrast-outline";
+        } else if (route.name === "Visualizer") {
+          iconName = focused ? "color-filter" : "color-filter-outline";
+        }
+        return (
+          <Ionicons
+            name={iconName as any}
+            size={24}
+            color={focused ? COLORS.ACCENT : COLORS.TXT}
+          />
+        );
+      },
+      headerRight: () => (
+        <IconBnt
+          icon={"settings"}
+          size={24}
+          onClick={() => setModalVisible(true)}
+        />
+      ),
+
+      tabBarStyle: { backgroundColor: COLORS.LMNT },
+      headerStyle: { backgroundColor: COLORS.LMNT },
+      headerTitleStyle: { color: COLORS.TXT },
+      tabBarActiveTintColor: COLORS.ACCENT,
+      headerTitleAlign: "center" as "center" | "left",
+      tabBarShowLabel: false,
+    };
+  };
+
   return (
     <>
-      <Tab.Navigator
-        initialRouteName={trad[lang].screens.home}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName = "";
-            if (route.name === trad[lang].screens.home) {
-              iconName = focused ? "home" : "home-outline";
-            } else if (route.name === trad[lang].screens.palettesList) {
-              iconName = focused ? "list" : "list-outline";
-            } else if (route.name === trad[lang].screens.paletteCreator) {
-              iconName = focused ? "color-palette" : "color-palette-outline";
-            } else if (route.name === trad[lang].screens.contrastChecker) {
-              iconName = focused ? "contrast" : "contrast-outline";
-            } else if (route.name === trad[lang].screens.visualizer) {
-              iconName = focused ? "color-filter" : "color-filter-outline";
-            }
-            return (
-              <Ionicons
-                name={iconName as any}
-                size={24}
-                color={focused ? COLORS.ACCENT : COLORS.TXT}
-              />
-            );
-          },
-          headerRight: () => (
-            <IconBnt
-              icon={"settings"}
-              size={24}
-              onClick={() => setModalVisible(true)}
-            />
-          ),
-
-          tabBarStyle: { backgroundColor: COLORS.LMNT },
-          headerStyle: { backgroundColor: COLORS.LMNT },
-          headerTitleStyle: { color: COLORS.TXT },
-          tabBarActiveTintColor: COLORS.ACCENT,
-          headerTitleAlign: "center",
-          tabBarShowLabel: false,
-        })}
-      >
-        <Tab.Screen name={trad[lang].screens.home} component={Home} />
+      <Tab.Navigator initialRouteName="Home" screenOptions={screenOptions}>
         <Tab.Screen
-          name={trad[lang].screens.palettesList}
+          name="Home"
+          options={{ headerTitle: trad[lang].screens.home }}
+          component={Home}
+        />
+        <Tab.Screen
+          name="PalettesList"
+          options={{ headerTitle: trad[lang].screens.palettesList }}
           component={PalettesList}
         />
         <Tab.Screen
-          name={trad[lang].screens.paletteCreator}
+          name="PaletteCreator"
+          options={{ headerTitle: trad[lang].screens.paletteCreator }}
           component={PaletteCreator}
         />
         <Tab.Screen
-          name={trad[lang].screens.contrastChecker}
+          name="ContrastChecker"
+          options={{ headerTitle: trad[lang].screens.contrastChecker }}
           component={ContrastChecker}
         />
         <Tab.Screen
-          name={trad[lang].screens.visualizer}
+          name="Visualizer"
+          options={{ headerTitle: trad[lang].screens.visualizer }}
           component={Visualizer}
         />
       </Tab.Navigator>

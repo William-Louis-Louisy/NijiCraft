@@ -14,6 +14,7 @@ export const generateObjectId = () => {
   );
 };
 
+// Determine the text color based on the background color
 export const determineTextColor = (backgroundColor: string) => {
   const color = backgroundColor
     .substring(
@@ -31,7 +32,7 @@ export const determineTextColor = (backgroundColor: string) => {
 // Generate a random number between 0 and 255
 export const randomColor = () => Math.floor(Math.random() * 256);
 
-// Convert the rgba color to a hex string
+// RGBA to a HEX
 export const hexColor = (color: string) => {
   const rgba = color.replace("rgba(", "").replace(")", "").split(",");
   const r = parseInt(rgba[0]);
@@ -42,7 +43,7 @@ export const hexColor = (color: string) => {
   return `#${hex}`;
 };
 
-// Convertit une couleur hexadécimale en RGB
+// HEX to RGB
 export function hexToRgb(hex: string) {
   const bigint = parseInt(hex.substring(1), 16);
   const r = (bigint >> 16) & 255;
@@ -52,6 +53,7 @@ export function hexToRgb(hex: string) {
   return { r, g, b };
 }
 
+// RGB to HSL
 export function rgbToHsl(r: number, g: number, b: number) {
   r /= 255;
   g /= 255;
@@ -59,7 +61,7 @@ export function rgbToHsl(r: number, g: number, b: number) {
 
   let h = 0,
     s = 0,
-    l = 0; // Initialisation ici
+    l = 0;
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   l = (max + min) / 2;
@@ -81,9 +83,12 @@ export function rgbToHsl(r: number, g: number, b: number) {
     h /= 6;
   }
 
-  return { h: h * 360, s: s * 100, l: l * 100 };
+  h = Math.round(h * 360);
+
+  return { h: h, s: s * 100, l: l * 100 };
 }
 
+// RGB to HSV
 export function rgbToHsv(r: number, g: number, b: number) {
   r /= 255;
   g /= 255;
@@ -91,7 +96,7 @@ export function rgbToHsv(r: number, g: number, b: number) {
 
   let h = 0,
     s = 0,
-    v = 0; // Initialisation ici
+    v = 0;
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   v = max;
@@ -113,7 +118,9 @@ export function rgbToHsv(r: number, g: number, b: number) {
     h /= 6;
   }
 
-  return { h: h * 360, s: s * 100, v: v * 100 };
+  h = Math.round(h * 360);
+
+  return { h: h, s: s * 100, v: v * 100 };
 }
 
 // HSL to RGB
