@@ -13,7 +13,7 @@ const HomeBtn = ({ target, icon, label }: any) => {
         onPress={() => navigation.navigate(target, {})}
         style={styles.button}
       >
-        <Ionicons name={icon} size={20} color={COLORS.TXT} />
+        <Ionicons name={icon} size={20} color={COLORS.LMNT} />
       </TouchableOpacity>
     </View>
   );
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.LMNT,
+    backgroundColor: COLORS.ACCENT,
     width: 40,
     height: 40,
     padding: 8,

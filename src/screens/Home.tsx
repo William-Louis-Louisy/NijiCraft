@@ -1,10 +1,16 @@
 import React from "react";
+import { trad } from "../lang/traduction";
 import HomeBtn from "../components/HomeBtn";
 import { COLORS } from "../constants/Colors";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { trad } from "../lang/traduction";
 import { AppContext } from "../contexts/AppContext";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  Dimensions,
+} from "react-native";
 
 const screensList = [
   {
@@ -50,14 +56,24 @@ const Home = () => {
           alignItems: "flex-start",
           paddingVertical: 40,
           paddingHorizontal: 16,
-          backgroundColor: COLORS.ACCENT,
           gap: 16,
         }}
       >
-        <Text style={{ fontSize: 28, fontWeight: "bold", color: COLORS.LMNT }}>
+        <View style={{ width: "100%", alignItems: "center", marginBottom: 12 }}>
+          <Image
+            source={require("../assets/logo-nijicraft.png")}
+            style={{ width: 128, height: 64 }}
+          />
+        </View>
+
+        <Text
+          style={{ fontSize: 28, fontWeight: "bold", color: COLORS.ACCENT }}
+        >
           {trad[lang].home.title}
         </Text>
-        <Text style={{ fontWeight: "bold", fontSize: 18, color: COLORS.BG }}>
+        <Text
+          style={{ fontWeight: "bold", fontSize: 18, color: COLORS.ACCENT }}
+        >
           {trad[lang].home.subtitle}
         </Text>
 
@@ -75,7 +91,9 @@ const Home = () => {
                     {trad[lang].home[screen.tradKey].title}
                   </Text>
                 </View>
-                <Text>{trad[lang].home[screen.tradKey].description}</Text>
+                <Text style={styles.description}>
+                  {trad[lang].home[screen.tradKey].description}
+                </Text>
               </View>
             );
           })}
@@ -109,6 +127,10 @@ const styles = StyleSheet.create({
   btnTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: COLORS.LMNT,
+    color: COLORS.ACCENT,
+  },
+
+  description: {
+    color: COLORS.TXT,
   },
 });

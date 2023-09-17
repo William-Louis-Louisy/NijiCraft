@@ -18,6 +18,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const MainStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+interface VisualizerRouteParams {
+  handleModal: () => void;
+}
+
 function Routes() {
   return (
     <MainStack.Navigator
@@ -77,13 +81,6 @@ function BottomTabs() {
           />
         );
       },
-      headerRight: () => (
-        <IconBnt
-          icon={"settings"}
-          size={24}
-          onClick={() => setModalVisible(true)}
-        />
-      ),
 
       tabBarStyle: { backgroundColor: COLORS.LMNT },
       headerStyle: { backgroundColor: COLORS.LMNT },
@@ -99,7 +96,16 @@ function BottomTabs() {
       <Tab.Navigator initialRouteName="Home" screenOptions={screenOptions}>
         <Tab.Screen
           name="Home"
-          options={{ headerTitle: trad[lang].screens.home }}
+          options={{
+            headerTitle: trad[lang].screens.home,
+            headerRight: () => (
+              <IconBnt
+                icon={"settings"}
+                size={24}
+                onClick={() => setModalVisible(true)}
+              />
+            ),
+          }}
           component={Home}
         />
         <Tab.Screen

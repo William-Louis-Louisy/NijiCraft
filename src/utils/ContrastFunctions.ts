@@ -107,4 +107,58 @@ function getStars(contrastRating: number) {
   }
 }
 
-export { hexToRgb, getLuminance, getContrastRatio, evaluateContrast, getStars };
+function evaluateColorContrast(color1: string, color2: string) {
+  const contrastRatio = Math.round(getContrastRatio(color1, color2) * 10) / 10;
+  const contrastRating = evaluateContrast(contrastRatio);
+  return {
+    contrastRatio,
+    contrastRating,
+  };
+}
+
+function getContrastColor(contrastRatio: number) {
+  const thresholds = [
+    {
+      min: 7,
+      color: { textColor: "#0d5f07", bgColor: "#d2fbd0", valueKey: "exellent" },
+    },
+    {
+      min: 4.5,
+      color: { textColor: "#5f5207", bgColor: "#fbf5d0", valueKey: "good" },
+    },
+    {
+      min: 3,
+      color: {
+        textColor: "#5f5207",
+        bgColor: "#fbf5d0",
+        valueKey: "acceptable",
+      },
+    },
+    {
+      min: 2,
+      color: { textColor: "#5f0707", bgColor: "#fbd0d0", valueKey: "poor" },
+    },
+  ];
+  for (const threshold of thresholds) {
+    if (contrastRatio >= threshold.min) {
+      return threshold.color;
+    }
+  }
+  return { textColor: "#5f0707", bgColor: "#fbd0d0", valueKey: "veryPoor" };
+}
+
+function isValidHexColor(hex: string): boolean {
+  const hexRegex = /^#([A-Fa-f0-9]{3,4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/;
+  return hexRegex.test(hex);
+}
+
+export {
+  hexToRgb,
+  getLuminance,
+  getContrastRatio,
+  evaluateContrast,
+  getStars,
+  evaluateColorContrast,
+  getContrastColor,
+  isValidHexColor,
+};

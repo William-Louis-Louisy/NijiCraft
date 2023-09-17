@@ -1,4 +1,3 @@
-import { useState, useCallback, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,11 +8,10 @@ import {
 import { COLORS } from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { IPalette } from "../types/Palette.types";
-import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { trad } from "../lang/traduction";
 import { AppContext } from "../contexts/AppContext";
-import PaletteDetails from "./PaletteDetails";
+import { useFocusEffect } from "@react-navigation/native";
+import { useState, useCallback, useContext } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PalettesList = ({ navigation: { navigate } }) => {
   const { lang } = useContext(AppContext);

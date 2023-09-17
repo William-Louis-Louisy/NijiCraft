@@ -1,9 +1,9 @@
 import React from "react";
-import { COLORS } from "../constants/Colors";
-import { IBtnGroup } from "../types/BtnGroup.types";
+import { COLORS } from "../../constants/Colors";
+import { IBtnGroup } from "../../types/BtnGroup.types";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
-const BtnGroup = ({ type, setType }: IBtnGroup) => {
+const ConstrastBtnGroup: React.FC<IBtnGroup> = ({ type, setType }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -14,14 +14,6 @@ const BtnGroup = ({ type, setType }: IBtnGroup) => {
           style={[styles.label, type === "picker" ? styles.activeLabel : {}]}
         >
           Picker
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => setType("hex")}
-        style={[styles.btn, type === "hex" ? styles.activeBtn : {}]}
-      >
-        <Text style={[styles.label, type === "hex" ? styles.activeLabel : {}]}>
-          HEX
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -43,20 +35,20 @@ const BtnGroup = ({ type, setType }: IBtnGroup) => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => setType("harmonies")}
-        style={[styles.btnRight, type === "harmonies" ? styles.activeBtn : {}]}
+        onPress={() => setType("palettes")}
+        style={[styles.btnRight, type === "palettes" ? styles.activeBtn : {}]}
       >
         <Text
-          style={[styles.label, type === "harmonies" ? styles.activeLabel : {}]}
+          style={[styles.label, type === "palettes" ? styles.activeLabel : {}]}
         >
-          Harms
+          Palettes
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default BtnGroup;
+export default ConstrastBtnGroup;
 
 const styles = StyleSheet.create({
   container: {

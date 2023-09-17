@@ -4,4 +4,5 @@ export interface IIconBtn {
   label?: string;
   bgColor?: string;
   size?: number;
+  color?: string;
 }

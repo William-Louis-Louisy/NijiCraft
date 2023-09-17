@@ -6,8 +6,8 @@ import Toast from "react-native-toast-message";
 import { IColor } from "../types/Palette.types";
 import { AppContext } from "../contexts/AppContext";
 import { Dropdown } from "react-native-element-dropdown";
-import { StyleSheet, View, FlatList, Text } from "react-native";
 import { determineTextColor } from "../utils/PaletteFunctions";
+import { StyleSheet, View, FlatList, Text } from "react-native";
 
 const PaletteDetails = ({ navigation, route }) => {
   const { lang } = React.useContext(AppContext);

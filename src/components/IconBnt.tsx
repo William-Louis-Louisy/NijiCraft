@@ -2,9 +2,16 @@ import React from "react";
 import { COLORS } from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { IIconBtn } from "../types/IconBtn.types";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 
-const IconBnt = ({ icon, label, onClick, bgColor, size = 16 }: IIconBtn) => {
+const IconBnt = ({
+  icon,
+  label,
+  onClick,
+  bgColor,
+  size = 16,
+  color = COLORS.TXT,
+}: IIconBtn) => {
   return (
     <TouchableOpacity
       style={{
@@ -20,16 +27,10 @@ const IconBnt = ({ icon, label, onClick, bgColor, size = 16 }: IIconBtn) => {
       }}
       onPress={() => onClick()}
     >
-      <Ionicons name={icon as any} size={size} color={COLORS.TXT} />
-      <Text style={{ color: COLORS.TXT, fontSize: size }}>{label}</Text>
+      <Ionicons name={icon as any} size={size} color={color} />
+      <Text style={{ color: color, fontSize: size }}>{label}</Text>
     </TouchableOpacity>
   );
 };
 
 export default IconBnt;
-
-const styles = StyleSheet.create({
-  label: {
-    color: COLORS.TXT,
-  },
-});
