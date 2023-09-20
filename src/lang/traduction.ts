@@ -3,6 +3,9 @@ export const trad = {
     common: {
       settings: "Paramètres",
       chooseLanguage: "Choisir la langue",
+      delete: "Supprimer",
+      deleteWarning: "Êtes-vous sûr de vouloir supprimer cette palette ?",
+      cancel: "Annuler",
     },
 
     constrastChecker: {
@@ -50,14 +53,20 @@ export const trad = {
       paletteCreator: "Créateur de palette",
       palettesList: "Liste des palettes",
       paletteDetails: "Détails de la palette",
-      contrastChecker: "Contrast Checker",
-      visualizer: "Visualizer",
+      contrastChecker: "Vérificateur de contraste",
+      visualizer: "Visualiseur",
+    },
+
+    toasts: {
+      maximumReached: "Nombre maximum de couleurs atteint !",
+      saveError:
+        "Une erreur est survenue lors de la sauvegarde de votre palette.",
     },
 
     paletteCreator: {
       reset: "Réinitialiser",
       picker: "Picker",
-      addColor: "Ajouter une couleur",
+      addColor: "Ajouter cette couleur",
       close: "Fermer",
       opacity: "Opacité",
       paletteName: "Nom de la palette",
@@ -110,6 +119,9 @@ export const trad = {
     common: {
       settings: "Settings",
       chooseLanguage: "Choose language",
+      delete: "Delete",
+      deleteWarning: "Are you sure you want to delete this palette ?",
+      cancel: "Cancel",
     },
 
     constrastChecker: {
@@ -160,10 +172,15 @@ export const trad = {
       visualizer: "Visualizer",
     },
 
+    toasts: {
+      maximumReached: "Maximum number of colors reached!",
+      saveError: "An error occured while saving your palette.",
+    },
+
     paletteCreator: {
       reset: "Reset",
       picker: "Picker",
-      addColor: "Add color",
+      addColor: "Add this color",
       close: "Close",
       opacity: "Opacity",
       paletteName: "Palette name",

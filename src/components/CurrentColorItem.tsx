@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { determineTextColor } from "../utils/PaletteFunctions";
 import { ICurrentColorItemProps } from "../types/Palette.types";
@@ -7,16 +7,12 @@ import { ICurrentColorItemProps } from "../types/Palette.types";
 const CurrentColorItem = ({ selectedColor }: ICurrentColorItemProps) => {
   return (
     <View
-      style={{
-        backgroundColor: selectedColor.hex,
-        height: 64,
-        width: "100%",
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: 16,
-      }}
+      style={[
+        styles.container,
+        {
+          backgroundColor: selectedColor.hex,
+        },
+      ]}
     >
       <Text
         style={{
@@ -38,3 +34,15 @@ const CurrentColorItem = ({ selectedColor }: ICurrentColorItemProps) => {
 };
 
 export default CurrentColorItem;
+
+const styles = StyleSheet.create({
+  container: {
+    height: 64,
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+  },
+});

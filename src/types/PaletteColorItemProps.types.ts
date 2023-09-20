@@ -1,5 +1,5 @@
 export interface IPaletteColorItemProps {
   color: string;
-  onEdit: Function;
+  onEdit?: (color: string) => void;
   onDelete: (color: string) => void;
 }

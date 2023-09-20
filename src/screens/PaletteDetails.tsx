@@ -9,7 +9,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { determineTextColor } from "../utils/PaletteFunctions";
 import { StyleSheet, View, FlatList, Text } from "react-native";
 
-const PaletteDetails = ({ navigation, route }) => {
+const PaletteDetails = ({ route }) => {
   const { lang } = React.useContext(AppContext);
   const colors: IColor[] = route.params.palette.colors;
   const paletteName = route.params.palette.paletteName;

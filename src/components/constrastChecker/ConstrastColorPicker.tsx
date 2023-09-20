@@ -99,7 +99,7 @@ const ConstrastColorPicker: React.FC<{
       >
         {pickerType === "picker" && (
           <>
-            <Panel1 style={{ width: "100%", height: 128 }} />
+            <Panel1 thumbSize={35} style={{ width: "100%", height: 128 }} />
             <View style={styles.slider}>
               <Text style={{ fontSize: 12, color: COLORS.TXT }}>HUE</Text>
               <HueSlider />

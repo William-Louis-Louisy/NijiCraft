@@ -2,12 +2,14 @@ import React from "react";
 import { COLORS } from "../constants/Colors";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { IPaletteColorItemProps } from "../types/PaletteColorItemProps.types";
+import {
+  determineTextColor,
+  handleStringifyColor,
+  hexToRgb,
+} from "../utils/PaletteFunctions";
 
-const PaletteColorItem = ({
-  color,
-  onEdit,
-  onDelete,
-}: IPaletteColorItemProps) => {
+const PaletteColorItem = ({ color, onDelete }: IPaletteColorItemProps) => {
+  const rgbColor = handleStringifyColor(hexToRgb(color));
   return (
     <TouchableOpacity
       onLongPress={() => onDelete(color)}
@@ -18,7 +20,11 @@ const PaletteColorItem = ({
       }}
     >
       <View style={styles.container}>
-        <Text style={styles.colorName}>{color.toUpperCase()}</Text>
+        <Text
+          style={[styles.colorName, { color: determineTextColor(rgbColor) }]}
+        >
+          {color.toUpperCase()}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -40,7 +46,6 @@ const styles = StyleSheet.create({
   colorName: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "white",
   },
 
   btn: {

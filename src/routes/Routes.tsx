@@ -82,12 +82,17 @@ function BottomTabs() {
         );
       },
 
-      tabBarStyle: { backgroundColor: COLORS.LMNT },
-      headerStyle: { backgroundColor: COLORS.LMNT },
+      tabBarStyle: { backgroundColor: COLORS.LMNT, borderColor: COLORS.LMNT },
+      headerStyle: {
+        backgroundColor: COLORS.LMNT,
+        elevation: 0,
+        shadowOpacity: 0,
+      },
       headerTitleStyle: { color: COLORS.TXT },
       tabBarActiveTintColor: COLORS.ACCENT,
       headerTitleAlign: "center" as "center" | "left",
       tabBarShowLabel: false,
+      tabBarHideOnKeyboard: true,
     };
   };
 
@@ -129,16 +134,8 @@ function BottomTabs() {
           component={Visualizer}
         />
       </Tab.Navigator>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(false);
-        }}
-      >
-        <Settings setModalVisible={setModalVisible} />
-      </Modal>
+
+      {modalVisible && <Settings setModalVisible={setModalVisible} />}
     </>
   );
 }

@@ -15,15 +15,16 @@ import {
 import { trad } from "../lang/traduction";
 import { COLORS } from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
 import { AppContext } from "../contexts/AppContext";
 import PickerModal from "../components/PickerModal";
 import { ColorPickerRef } from "reanimated-color-picker";
 import { IColor, IPalette } from "../types/Palette.types";
+import { useFocusEffect } from "@react-navigation/native";
 import PaletteColorItem from "../components/PaletteColorItem";
 import CurrentColorItem from "../components/CurrentColorItem";
-import { useState, useEffect, useRef, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getColorHarmonies } from "../utils/ColorHarmonies";
+import { useState, useEffect, useRef, useContext, useCallback } from "react";
 
 const defaultColor = {
   hex: "#000000",
@@ -35,35 +36,52 @@ const defaultColor = {
   hsla: "hsla(0, 0, 0, 1)",
 };
 
-const defaultPalette = {
+const defaultPalette: IPalette = {
   id: generateObjectId(),
   name: "My palette",
   colors: [],
 };
 
-const PaletteCreator = () => {
+const PaletteCreator = ({ route }) => {
   const { lang } = useContext(AppContext);
   const [currentPalette, setCurrentPalette] =
     useState<IPalette>(defaultPalette);
   const [pickerType, setPickerType] = useState<string>("picker");
-  const [modalVisible, setModalVisible] = useState<boolean>(true);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedColorHex, setSelectedColorHex] = useState("#FF0000");
   const [selectedColor, setSelectedColor] = useState<IColor>(defaultColor);
   const [inputValue, setInputValue] = useState<string>(selectedColorHex);
   const pickerRef = useRef<ColorPickerRef>(null);
 
+  const MAX_COLORS = 12;
+
+  const isValidHexColor = (hex: string): boolean => {
+    return /^#([0-9A-Fa-f]{3,4}|[0-9A-Fa-f]{6,8})$/.test(hex);
+  };
+
   const onSelectColor = ({ hex, rgb, rgba, hsv, hsva, hsl, hsla }: any) => {
     setSelectedColorHex(hex);
     setSelectedColor({ hex, rgb, rgba, hsv, hsva, hsl, hsla });
   };
+
+  const onChangeColor = ({ hex, rgb, rgba, hsv, hsva, hsl, hsla }: any) => {
+    setSelectedColor({ hex, rgb, rgba, hsv, hsva, hsl, hsla });
+  };
+
   const addColor = () => {
-    if (currentPalette.colors.length < 12) {
+    if (currentPalette.colors.length < MAX_COLORS) {
       setCurrentPalette({
         ...currentPalette,
         colors: [...currentPalette.colors, selectedColor],
       });
     } else {
-      alert("You have reached the maximum number of colors (12).");
+      Toast.show({
+        type: "error",
+        text1: trad[lang].toasts.maximumReached,
+        visibilityTime: 2000,
+        autoHide: true,
+        topOffset: 60,
+      });
     }
   };
 
@@ -78,9 +96,7 @@ const PaletteCreator = () => {
   };
 
   const handleHexInputEndEditing = () => {
-    const isValidHex = /^#([0-9A-Fa-f]{3,4}|[0-9A-Fa-f]{6,8})$/.test(
-      inputValue
-    );
+    const isValidHex = isValidHexColor(inputValue);
     if (isValidHex) {
       setSelectedColorHex(inputValue);
 
@@ -108,6 +124,9 @@ const PaletteCreator = () => {
   // Reset palette
   const resetPalette = () => {
     setCurrentPalette(defaultPalette);
+
+    // reset route params
+    route.params = {};
   };
 
   // Save after every change to currentPalette
@@ -138,11 +157,33 @@ const PaletteCreator = () => {
         await AsyncStorage.setItem("palettes", JSON.stringify(palettesList));
       } catch (error) {
         console.error("Erreur lors de la sauvegarde des palettes :", error);
+        Toast.show({
+          type: "error",
+          text1: trad[lang].toasts.saveError,
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 60,
+        });
       }
     };
 
     onChangeSavePalettes();
   }, [currentPalette]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (
+        route.params?.paletteToEdit &&
+        route.params?.paletteToEdit.id !== currentPalette.id
+      ) {
+        setCurrentPalette(route.params.paletteToEdit);
+      }
+    }, [route.params?.paletteToEdit])
+  );
+
+  useEffect(() => {
+    setInputValue(selectedColorHex);
+  }, [selectedColorHex]);
 
   return (
     <ScrollView
@@ -207,7 +248,6 @@ const PaletteCreator = () => {
         <PaletteColorItem
           key={index}
           color={color.hex}
-          onEdit={() => console.log("yeah")}
           onDelete={() => deleteColor(color)}
         />
       ))}
@@ -223,6 +263,7 @@ const PaletteCreator = () => {
         selectedColor={selectedColor}
         setPickerType={setPickerType}
         onSelectColor={onSelectColor}
+        onChangeColor={onChangeColor}
         setInputValue={setInputValue}
         setModalVisible={setModalVisible}
         setSelectedColor={setSelectedColor}

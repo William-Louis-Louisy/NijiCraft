@@ -3,6 +3,8 @@ export const COLORS = {
   LMNT: "#130a30",
   TXT: "#fdf6ff",
   ACCENT: "#F9F871",
+  WARNING: "#ff0000",
+  GOOD: "#306b3a",
 };
 
 export const LCOLORS = {
@@ -10,4 +12,6 @@ export const LCOLORS = {
   LMNT: "#130a30",
   TXT: "#070311",
   ACCENT: "#F9F871",
+  WARNING: "#ff0000",
+  GOOD: "#306b3a",
 };

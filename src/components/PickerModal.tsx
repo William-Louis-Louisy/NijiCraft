@@ -38,6 +38,7 @@ const PickerModal = ({
   modalVisible,
   setPickerType,
   onSelectColor,
+  onChangeColor,
   setInputValue,
   selectedColor,
   setModalVisible,
@@ -87,14 +88,14 @@ const PickerModal = ({
           style={{ width: "100%" }}
           value={selectedColorHex}
           onComplete={onSelectColor}
+          onChange={onChangeColor}
           sliderThickness={12}
           thumbSize={22}
-          boundedThumb={true}
           thumbStyle={{ marginBottom: 8 }}
         >
           {pickerType === "picker" && (
             <>
-              <Panel1 style={{ width: "100%", height: 128 }} />
+              <Panel1 thumbSize={35} style={{ width: "100%" }} />
               <View style={styles.slider}>
                 <Text style={{ fontSize: 12, color: COLORS.TXT }}>HUE</Text>
                 <HueSlider />
@@ -111,7 +112,7 @@ const PickerModal = ({
 
           {pickerType === "hex" && (
             <>
-              <Panel1 style={{ width: "100%", height: 128 }} />
+              <Panel1 thumbSize={35} style={{ width: "100%" }} />
               <View style={styles.slider}>
                 <Text style={{ fontSize: 12, color: COLORS.TXT }}>
                   {trad[lang].paletteCreator.hue}
@@ -242,7 +243,8 @@ const PickerModal = ({
           <IconBnt
             icon="add"
             label={trad[lang].paletteCreator.addColor}
-            bgColor={COLORS.BG}
+            bgColor={COLORS.ACCENT}
+            color={COLORS.BG}
             onClick={() => addColor()}
           />
           <IconBnt

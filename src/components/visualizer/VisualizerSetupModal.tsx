@@ -8,19 +8,21 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { trad } from "../../lang/traduction";
+import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/Colors";
 import { Dropdown } from "react-native-element-dropdown";
 import { elements } from "../../constants/MockupElements";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IColor, IPalette } from "../../types/Palette.types";
 
 const VisualizerSetupModal = ({
-  setModal,
-  mockup,
   lang,
+  mockup,
+  setModal,
   palettes,
+  setMockup,
   selectedPalette,
   setSelectedPalette,
-  setMockup,
 }) => {
   const [section, setSection] = useState("palettes");
 
@@ -39,9 +41,57 @@ const VisualizerSetupModal = ({
       <View style={styles.pickerContainer}>
         {/* HEADER */}
         <View style={styles.modalHeader}>
-          <Text style={styles.modalTitle}>
-            {trad[lang].visualizer.modalTitle}
-          </Text>
+          <View style={styles.buttonGroup}>
+            <TouchableOpacity
+              style={{
+                paddingVertical: 6,
+                paddingHorizontal: 8,
+                borderWidth: 1,
+                borderColor:
+                  section === "palettes" ? COLORS.ACCENT : COLORS.TXT,
+                backgroundColor:
+                  section === "palettes" ? COLORS.ACCENT : COLORS.LMNT,
+                borderTopLeftRadius: 6,
+                borderBottomLeftRadius: 6,
+              }}
+              onPress={() => setSection("palettes")}
+            >
+              <MaterialCommunityIcons
+                name="palette-swatch-outline"
+                size={20}
+                color={section === "palettes" ? COLORS.BG : COLORS.TXT}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                paddingVertical: 6,
+                paddingHorizontal: 8,
+                borderWidth: 1,
+                borderColor: section === "setup" ? COLORS.ACCENT : COLORS.TXT,
+                backgroundColor:
+                  section === "setup" ? COLORS.ACCENT : COLORS.LMNT,
+                marginLeft: -1,
+                borderTopRightRadius: 6,
+                borderBottomRightRadius: 6,
+              }}
+              onPress={() => setSection("setup")}
+            >
+              <MaterialCommunityIcons
+                name="brush"
+                size={20}
+                color={section === "setup" ? COLORS.BG : COLORS.TXT}
+              />
+            </TouchableOpacity>
+          </View>
+
+          {/* CLOSE MODAL BUTTON */}
+          <MaterialCommunityIcons
+            name="close"
+            size={20}
+            color={COLORS.TXT}
+            style={{ marginBottom: 16, marginRight: 16 }}
+            onPress={() => setModal(false)}
+          />
         </View>
 
         {/* CONTENT */}
@@ -54,24 +104,35 @@ const VisualizerSetupModal = ({
               {/* PALETTES LIST */}
               <FlatList
                 data={palettes}
+                style={{ marginBottom: 16 }}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item, index }) => (
+                renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() => handlePaletteSelection(item)}
                     style={{
                       width: "100%",
                       marginBottom: 8,
+                      padding: 8,
+                      backgroundColor: COLORS.BG,
+                      borderRadius: 6,
                       ...(selectedPalette.id &&
                         selectedPalette.id === item.id && {
-                          borderWidth: 1,
-                          borderColor: COLORS.ACCENT,
-                          paddingTop: 4,
-                          borderTopLeftRadius: 6,
-                          borderTopRightRadius: 6,
+                          backgroundColor: COLORS.GOOD,
                         }),
                     }}
                   >
-                    <Text style={{ color: COLORS.TXT }}>{item.name}</Text>
+                    <View style={styles.paletteHead}>
+                      <Text style={styles.label}>{item.name}</Text>
+
+                      {selectedPalette.id === item.id && (
+                        <Ionicons
+                          name="ios-checkmark-done-sharp"
+                          size={16}
+                          color={COLORS.TXT}
+                        />
+                      )}
+                    </View>
+
                     <View
                       style={{
                         width: "100%",
@@ -207,17 +268,12 @@ const styles = StyleSheet.create({
   },
 
   modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
     borderBottomWidth: 0.5,
     borderBottomColor: COLORS.TXT,
-  },
-
-  modalTitle: {
-    fontWeight: "bold",
-    color: COLORS.TXT,
-    textAlign: "center",
-    paddingBottom: 16,
   },
 
   modalContent: {
@@ -238,5 +294,24 @@ const styles = StyleSheet.create({
     borderColor: COLORS.TXT,
     borderRadius: 8,
     marginBottom: 16,
+  },
+
+  label: {
+    color: COLORS.TXT,
+    paddingVertical: 4,
+  },
+
+  paletteHead: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  buttonGroup: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 16,
+    marginLeft: 16,
   },
 });

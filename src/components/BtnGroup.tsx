@@ -1,57 +1,47 @@
 import React from "react";
 import { COLORS } from "../constants/Colors";
 import { IBtnGroup } from "../types/BtnGroup.types";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View } from "react-native";
+import PickerButton from "./PickerButton";
 
 const BtnGroup = ({ type, setType }: IBtnGroup) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => setType("picker")}
-        style={[styles.btnLeft, type === "picker" ? styles.activeBtn : {}]}
-      >
-        <Text
-          style={[styles.label, type === "picker" ? styles.activeLabel : {}]}
-        >
-          Picker
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => setType("hex")}
-        style={[styles.btn, type === "hex" ? styles.activeBtn : {}]}
-      >
-        <Text style={[styles.label, type === "hex" ? styles.activeLabel : {}]}>
-          HEX
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => setType("rgba")}
-        style={[styles.btn, type === "rgba" ? styles.activeBtn : {}]}
-      >
-        <Text style={[styles.label, type === "rgba" ? styles.activeLabel : {}]}>
-          RGBA
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => setType("hsva")}
-        style={[styles.btn, type === "hsva" ? styles.activeBtn : {}]}
-      >
-        <Text style={[styles.label, type === "hsva" ? styles.activeLabel : {}]}>
-          HSVA
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => setType("harmonies")}
-        style={[styles.btnRight, type === "harmonies" ? styles.activeBtn : {}]}
-      >
-        <Text
-          style={[styles.label, type === "harmonies" ? styles.activeLabel : {}]}
-        >
-          Harms
-        </Text>
-      </TouchableOpacity>
+      <PickerButton
+        type="picker"
+        currentType={type}
+        setType={setType}
+        label="Picker"
+        position="left"
+      />
+      <PickerButton
+        type="hex"
+        currentType={type}
+        setType={setType}
+        label="HEX"
+        position="middle"
+      />
+      <PickerButton
+        type="rgba"
+        currentType={type}
+        setType={setType}
+        label="RGBA"
+        position="middle"
+      />
+      <PickerButton
+        type="hsva"
+        currentType={type}
+        setType={setType}
+        label="HSVA"
+        position="middle"
+      />
+      <PickerButton
+        type="harmonies"
+        currentType={type}
+        setType={setType}
+        label="Harms"
+        position="right"
+      />
     </View>
   );
 };

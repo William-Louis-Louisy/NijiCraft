@@ -7,6 +7,7 @@ export interface IPickerModalProps {
   modalVisible: boolean;
   setPickerType: (type: string) => void;
   onSelectColor: any;
+  onChangeColor: any;
   setInputValue: (value: string) => void;
   setModalVisible: (visible: boolean) => void;
   selectedColor: any;

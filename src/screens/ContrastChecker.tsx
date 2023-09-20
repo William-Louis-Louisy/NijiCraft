@@ -1,30 +1,23 @@
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 import {
   isValidHexColor,
   getContrastColor,
   evaluateColorContrast,
 } from "../utils/ContrastFunctions";
 import { COLORS } from "../constants/Colors";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { AppContext } from "../contexts/AppContext";
-import React, {
-  useState,
-  useContext,
-  useRef,
-  useCallback,
-  useEffect,
-} from "react";
+import { ColorPickerRef } from "reanimated-color-picker";
 import PreviewComponent from "../components/constrastChecker/PreviewComponent";
 import ColorInputComponent from "../components/constrastChecker/ColorInputComponent";
-import ContrastRatioComponent from "../components/constrastChecker/ContrastRatioComponent";
-import ColorPicker, {
-  ColorPickerRef,
-  HueSlider,
-  OpacitySlider,
-  Panel1,
-} from "reanimated-color-picker";
-import { trad } from "../lang/traduction";
 import ConstrastColorPicker from "../components/constrastChecker/ConstrastColorPicker";
-import ConstrastBtnGroup from "../components/constrastChecker/ConstrastBtnGroup";
+import ContrastRatioComponent from "../components/constrastChecker/ContrastRatioComponent";
 
 export interface IColorToCompare {
   textColor: string;
@@ -57,14 +50,14 @@ const ContrastChecker = () => {
   const handleTextColorChange = useCallback((e: any) => {
     const text = e.nativeEvent.text;
     if (isValidHexColor(text)) {
-      setColorsToCompare({ ...colorsToCompare, textColor: text });
+      setColorsToCompare((prevColors) => ({ ...prevColors, textColor: text }));
     }
   }, []);
 
   const handleBgColorChange = useCallback((e: any) => {
     const text = e.nativeEvent.text;
     if (isValidHexColor(text)) {
-      setColorsToCompare({ ...colorsToCompare, bgColor: text });
+      setColorsToCompare((prevColors) => ({ ...prevColors, bgColor: text }));
     }
   }, []);
 
