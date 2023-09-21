@@ -18,6 +18,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { IColorToCompare } from "../../screens/ContrastChecker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dropdown } from "react-native-element-dropdown";
+import { getPalettes } from "../../utils/CRUD";
 
 const ConstrastColorPicker: React.FC<{
   pickerMode: string;
@@ -40,25 +41,9 @@ const ConstrastColorPicker: React.FC<{
 }) => {
   const [palettesList, setPalettesList] = useState<IPalette[]>([]);
   // GET PALETTES FROM ASYNC STORAGE
-  const getPalettes = async () => {
-    try {
-      const palettes = await AsyncStorage.getItem("palettes");
-      if (palettes) {
-        const retrievedPalettes = JSON.parse(palettes);
-        if (
-          JSON.stringify(retrievedPalettes) !== JSON.stringify(palettesList)
-        ) {
-          setPalettesList(retrievedPalettes);
-        }
-      }
-    } catch (error) {
-      console.error("Erreur lors de la récupération des palettes :", error);
-    }
-  };
-
   useFocusEffect(
     useCallback(() => {
-      getPalettes();
+      getPalettes(lang, palettesList, setPalettesList);
     }, [])
   );
 

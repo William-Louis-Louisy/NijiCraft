@@ -6,8 +6,8 @@ import { AppContext } from "../contexts/AppContext";
 import Mockup from "../components/visualizer/Mockup";
 import { useFocusEffect } from "@react-navigation/native";
 import { useState, useContext, useCallback, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import VisualizerSetupModal from "../components/visualizer/VisualizerSetupModal";
+import { getPalettes } from "../utils/CRUD";
 
 const Visualizer = ({ navigation }) => {
   const { lang } = useContext(AppContext);
@@ -60,25 +60,9 @@ const Visualizer = ({ navigation }) => {
     });
   }, [mockup]);
 
-  const getUserPalettes = async () => {
-    try {
-      const palettes = await AsyncStorage.getItem("palettes");
-      if (palettes) {
-        const retrievedPalettes = JSON.parse(palettes);
-        if (
-          JSON.stringify(retrievedPalettes) !== JSON.stringify(userPalettes)
-        ) {
-          setUserPalettes(retrievedPalettes);
-        }
-      }
-    } catch (error) {
-      console.error("Erreur lors de la récupération des palettes :", error);
-    }
-  };
-
   useFocusEffect(
     useCallback(() => {
-      getUserPalettes();
+      getPalettes(lang, userPalettes, setUserPalettes);
     }, [])
   );
 

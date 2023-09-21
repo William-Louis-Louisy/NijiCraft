@@ -23,8 +23,8 @@ import { IColor, IPalette } from "../types/Palette.types";
 import { useFocusEffect } from "@react-navigation/native";
 import PaletteColorItem from "../components/PaletteColorItem";
 import CurrentColorItem from "../components/CurrentColorItem";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useEffect, useRef, useContext, useCallback } from "react";
+import { onChangeSavePalette } from "../utils/CRUD";
 
 const defaultColor = {
   hex: "#000000",
@@ -61,10 +61,6 @@ const PaletteCreator = ({ route }) => {
 
   const onSelectColor = ({ hex, rgb, rgba, hsv, hsva, hsl, hsla }: any) => {
     setSelectedColorHex(hex);
-    setSelectedColor({ hex, rgb, rgba, hsv, hsva, hsl, hsla });
-  };
-
-  const onChangeColor = ({ hex, rgb, rgba, hsv, hsva, hsl, hsla }: any) => {
     setSelectedColor({ hex, rgb, rgba, hsv, hsva, hsl, hsla });
   };
 
@@ -131,43 +127,7 @@ const PaletteCreator = ({ route }) => {
 
   // Save after every change to currentPalette
   useEffect(() => {
-    const onChangeSavePalettes = async () => {
-      try {
-        if (currentPalette.colors.length === 0) return;
-
-        const palettes = await AsyncStorage.getItem("palettes");
-        const parsedPalettes = palettes ? JSON.parse(palettes) : [];
-        const palettesList = Array.isArray(parsedPalettes)
-          ? parsedPalettes
-          : [];
-
-        // Vérifier si la currentPalette existe déjà dans le stockage
-        const existingIndex = palettesList.findIndex(
-          (p) => p.id === currentPalette.id
-        );
-
-        if (existingIndex !== -1) {
-          // Mettre à jour la palette existante
-          palettesList[existingIndex] = currentPalette;
-        } else {
-          // Ajouter la nouvelle palette
-          palettesList.push(currentPalette);
-        }
-
-        await AsyncStorage.setItem("palettes", JSON.stringify(palettesList));
-      } catch (error) {
-        console.error("Erreur lors de la sauvegarde des palettes :", error);
-        Toast.show({
-          type: "error",
-          text1: trad[lang].toasts.saveError,
-          visibilityTime: 2000,
-          autoHide: true,
-          topOffset: 60,
-        });
-      }
-    };
-
-    onChangeSavePalettes();
+    onChangeSavePalette(lang, currentPalette);
   }, [currentPalette]);
 
   useFocusEffect(
@@ -263,7 +223,6 @@ const PaletteCreator = ({ route }) => {
         selectedColor={selectedColor}
         setPickerType={setPickerType}
         onSelectColor={onSelectColor}
-        onChangeColor={onChangeColor}
         setInputValue={setInputValue}
         setModalVisible={setModalVisible}
         setSelectedColor={setSelectedColor}
@@ -322,27 +281,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     width: "100%",
     color: COLORS.TXT,
-  },
-
-  colorName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "white",
-  },
-
-  paletteContainer: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "pink",
-  },
-
-  buttonRow: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    marginTop: 24,
-    gap: 8,
   },
 });

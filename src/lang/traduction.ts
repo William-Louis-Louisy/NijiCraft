@@ -61,6 +61,10 @@ export const trad = {
       maximumReached: "Nombre maximum de couleurs atteint !",
       saveError:
         "Une erreur est survenue lors de la sauvegarde de votre palette.",
+      retriveError:
+        "Une erreur est survenue lors de la récupération de vos palettes.",
+      deleteError:
+        "Une erreur est survenue lors de la suppression de votre palette.",
     },
 
     paletteCreator: {
@@ -90,6 +94,13 @@ export const trad = {
       dropDown: "Sélectionnez un code",
       copyToClipboard: "Sélectionnez le code à copier dans le presse-papier",
       copied: "Copié dans le presse-papier !",
+    },
+
+    palettesList: {
+      empty: "Vous n'avez pas encore de palette",
+      emptyDescription:
+        "Créez votre première palette en cliquant sur le bouton ci-dessous !",
+      create: "Créer une palette",
     },
 
     visualizer: {
@@ -175,6 +186,8 @@ export const trad = {
     toasts: {
       maximumReached: "Maximum number of colors reached!",
       saveError: "An error occured while saving your palette.",
+      retriveError: "An error occured while retrieving your palettes.",
+      deleteError: "An error occured while deleting your palette.",
     },
 
     paletteCreator: {
@@ -204,6 +217,13 @@ export const trad = {
       dropDown: "Select a code",
       copyToClipboard: "Select the code to copy to clipboard",
       copied: "Copied to clipboard!",
+    },
+
+    palettesList: {
+      empty: "You don't have any palette yet",
+      emptyDescription:
+        "Create your first palette by clicking on the button below!",
+      create: "Create a palette",
     },
 
     visualizer: {

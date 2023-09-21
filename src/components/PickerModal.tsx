@@ -38,7 +38,6 @@ const PickerModal = ({
   modalVisible,
   setPickerType,
   onSelectColor,
-  onChangeColor,
   setInputValue,
   selectedColor,
   setModalVisible,
@@ -88,7 +87,6 @@ const PickerModal = ({
           style={{ width: "100%" }}
           value={selectedColorHex}
           onComplete={onSelectColor}
-          onChange={onChangeColor}
           sliderThickness={12}
           thumbSize={22}
           thumbStyle={{ marginBottom: 8 }}

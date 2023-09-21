@@ -1,10 +1,10 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/Colors";
 
-const HomeBtn = ({ target, icon, label }: any) => {
+const HomeBtn = ({ target, icon }: any) => {
   const navigation: any = useNavigation();
 
   return (
