@@ -1,53 +1,142 @@
-import React from "react";
 import Home from "../screens/Home";
+import { Modal } from "react-native";
+import { trad } from "../lang/traduction";
+import React, { useContext } from "react";
+import IconBnt from "../components/IconBnt";
+import { COLORS } from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import Settings from "../components/Settings";
 import Visualizer from "../screens/Visualizer";
 import PalettesList from "../screens/PalettesList";
+import { AppContext } from "../contexts/AppContext";
 import PaletteCreator from "../screens/PaletteCreator";
+import PaletteDetails from "../screens/PaletteDetails";
 import ContrastChecker from "../screens/ContrastChecker";
+import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { COLORS } from "../constants/Colors";
 
+const MainStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+interface VisualizerRouteParams {
+  handleModal: () => void;
+}
 
 function Routes() {
   return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName = "";
-          if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Palettes list") {
-            iconName = focused ? "list" : "list-outline";
-          } else if (route.name === "Palette creator") {
-            iconName = focused ? "color-palette" : "color-palette-outline";
-          } else if (route.name === "Contrast checker") {
-            iconName = focused ? "contrast" : "contrast-outline";
-          } else if (route.name === "Visualizer") {
-            iconName = focused ? "color-filter" : "color-filter-outline";
-          }
-          return (
-            <Ionicons
-              name={iconName}
-              size={24}
-              color={focused ? COLORS.ACCENT : COLORS.TXT}
-            />
-          );
-        },
-        tabBarStyle: { backgroundColor: COLORS.LMNT },
+    <MainStack.Navigator
+      initialRouteName="Tabs"
+      screenOptions={{
         headerStyle: { backgroundColor: COLORS.LMNT },
         headerTitleStyle: { color: COLORS.TXT },
-        tabBarActiveTintColor: COLORS.ACCENT,
-      })}
+        headerTitleAlign: "center" as "center" | "left",
+        headerBackImage: () => (
+          <Ionicons
+            name="chevron-back-outline"
+            size={24}
+            color={COLORS.TXT}
+            style={{ marginLeft: 8 }}
+          />
+        ),
+      }}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Palettes list" component={PalettesList} />
-      <Tab.Screen name="Palette creator" component={PaletteCreator} />
-      <Tab.Screen name="Contrast checker" component={ContrastChecker} />
-      <Tab.Screen name="Visualizer" component={Visualizer} />
-    </Tab.Navigator>
+      <MainStack.Screen
+        name="Tabs"
+        component={BottomTabs}
+        options={{ headerShown: false }}
+      />
+      <MainStack.Screen
+        name="PaletteDetails"
+        component={PaletteDetails}
+        options={({ route }: any) => ({ title: route.params.paletteName })}
+      />
+    </MainStack.Navigator>
+  );
+}
+
+function BottomTabs() {
+  const { lang } = useContext(AppContext);
+  const [modalVisible, setModalVisible] = React.useState(false);
+
+  const screenOptions = ({ route }) => {
+    return {
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName = "";
+        if (route.name === "Home") {
+          iconName = focused ? "home" : "home-outline";
+        } else if (route.name === "PalettesList") {
+          iconName = focused ? "list" : "list-outline";
+        } else if (route.name === "PaletteCreator") {
+          iconName = focused ? "color-palette" : "color-palette-outline";
+        } else if (route.name === "ContrastChecker") {
+          iconName = focused ? "contrast" : "contrast-outline";
+        } else if (route.name === "Visualizer") {
+          iconName = focused ? "color-filter" : "color-filter-outline";
+        }
+        return (
+          <Ionicons
+            name={iconName as any}
+            size={24}
+            color={focused ? COLORS.ACCENT : COLORS.TXT}
+          />
+        );
+      },
+
+      tabBarStyle: { backgroundColor: COLORS.LMNT, borderColor: COLORS.LMNT },
+      headerStyle: {
+        backgroundColor: COLORS.LMNT,
+        elevation: 0,
+        shadowOpacity: 0,
+      },
+      headerTitleStyle: { color: COLORS.TXT },
+      tabBarActiveTintColor: COLORS.ACCENT,
+      headerTitleAlign: "center" as "center" | "left",
+      tabBarShowLabel: false,
+      tabBarHideOnKeyboard: true,
+    };
+  };
+
+  return (
+    <>
+      <Tab.Navigator initialRouteName="Home" screenOptions={screenOptions}>
+        <Tab.Screen
+          name="Home"
+          options={{
+            headerTitle: trad[lang].screens.home,
+            headerRight: () => (
+              <IconBnt
+                icon={"settings"}
+                size={24}
+                onClick={() => setModalVisible(true)}
+              />
+            ),
+          }}
+          component={Home}
+        />
+        <Tab.Screen
+          name="PalettesList"
+          options={{ headerTitle: trad[lang].screens.palettesList }}
+          component={PalettesList}
+        />
+        <Tab.Screen
+          name="PaletteCreator"
+          options={{ headerTitle: trad[lang].screens.paletteCreator }}
+          component={PaletteCreator}
+        />
+        <Tab.Screen
+          name="ContrastChecker"
+          options={{ headerTitle: trad[lang].screens.contrastChecker }}
+          component={ContrastChecker}
+        />
+        <Tab.Screen
+          name="Visualizer"
+          options={{ headerTitle: trad[lang].screens.visualizer }}
+          component={Visualizer}
+        />
+      </Tab.Navigator>
+
+      {modalVisible && <Settings setModalVisible={setModalVisible} />}
+    </>
   );
 }
 
