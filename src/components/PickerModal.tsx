@@ -242,6 +242,7 @@ const PickerModal = ({
             icon="add"
             label={trad[lang].paletteCreator.addColor}
             bgColor={COLORS.ACCENT}
+            size={14}
             color={COLORS.BG}
             onClick={() => addColor()}
           />
@@ -249,6 +250,7 @@ const PickerModal = ({
             icon="close"
             label={trad[lang].paletteCreator.close}
             bgColor={COLORS.BG}
+            size={14}
             onClick={() => setModalVisible(false)}
           />
         </View>

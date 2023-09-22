@@ -14,6 +14,8 @@ import PaletteDetails from "../screens/PaletteDetails";
 import ContrastChecker from "../screens/ContrastChecker";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import AboutUs from "../screens/AboutUs";
+import ClearDataModal from "../components/ClearDataModal";
 
 const MainStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,6 +25,7 @@ interface VisualizerRouteParams {
 }
 
 function Routes() {
+  const { lang } = useContext(AppContext);
   return (
     <MainStack.Navigator
       initialRouteName="Tabs"
@@ -50,13 +53,27 @@ function Routes() {
         component={PaletteDetails}
         options={({ route }: any) => ({ title: route.params.paletteName })}
       />
+      <MainStack.Screen
+        name="AboutUs"
+        component={AboutUs}
+        options={{
+          headerTitle: trad[lang].aboutUs.title,
+          headerTitleStyle: { fontSize: 16, color: COLORS.TXT },
+        }}
+      />
     </MainStack.Navigator>
   );
 }
 
 function BottomTabs() {
   const { lang } = useContext(AppContext);
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [settingsModal, setSettingsModal] = React.useState(false);
+  const [clearDataModal, setClearDataModal] = React.useState(false);
+
+  const handleClearDataModal = () => {
+    setSettingsModal(false);
+    setClearDataModal(true);
+  };
 
   const screenOptions = ({ route }) => {
     return {
@@ -106,8 +123,8 @@ function BottomTabs() {
             headerRight: () => (
               <IconBnt
                 icon={"settings"}
-                size={24}
-                onClick={() => setModalVisible(true)}
+                size={20}
+                onClick={() => setSettingsModal(true)}
               />
             ),
           }}
@@ -135,7 +152,16 @@ function BottomTabs() {
         />
       </Tab.Navigator>
 
-      {modalVisible && <Settings setModalVisible={setModalVisible} />}
+      {settingsModal && (
+        <Settings
+          setModalVisible={setSettingsModal}
+          clearData={handleClearDataModal}
+        />
+      )}
+
+      {clearDataModal && (
+        <ClearDataModal setModalVisible={setClearDataModal} lang={lang} />
+      )}
     </>
   );
 }
