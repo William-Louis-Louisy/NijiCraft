@@ -1,19 +1,26 @@
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
 import { trad } from "../lang/traduction";
 import HomeBtn from "../components/HomeBtn";
 import { COLORS } from "../constants/Colors";
 import { AppContext } from "../contexts/AppContext";
 import { screensList } from "../constants/ScreensList";
-import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
 
-const Home = () => {
+const Home = ({ navigation: { navigate } }) => {
   const { lang } = React.useContext(AppContext);
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={{
-        flexGrow: 1,
         alignItems: "center",
+        position: "relative",
       }}
     >
       {/* Main Banner */}
@@ -66,6 +73,16 @@ const Home = () => {
             );
           })}
         </View>
+        {/* FOOTER */}
+      </View>
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={() => navigate("AboutUs", {})}>
+          <Text
+            style={{ color: COLORS.TXT, fontSize: 12, fontStyle: "italic" }}
+          >
+            © 2023 221B-BakerScript.
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -100,5 +117,16 @@ const styles = StyleSheet.create({
 
   description: {
     color: COLORS.TXT,
+  },
+
+  footer: {
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: "100%",
+    alignItems: "center",
+    paddingVertical: 32,
+    paddingHorizontal: 16,
+    backgroundColor: COLORS.LMNT,
   },
 });

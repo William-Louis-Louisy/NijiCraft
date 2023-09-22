@@ -3,10 +3,18 @@ import { trad } from "../lang/traduction";
 import { COLORS } from "../constants/Colors";
 import { languages } from "../utils/Languages";
 import { AppContext } from "../contexts/AppContext";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import IconBnt from "./IconBnt";
 
-const Settings = ({ setModalVisible }) => {
+const Settings = ({ setModalVisible, clearData }) => {
   const { lang, storeLang } = useContext(AppContext);
 
   return (
@@ -35,27 +43,53 @@ const Settings = ({ setModalVisible }) => {
         </View>
 
         <View style={styles.settingBox}>
+          {/* LANGUAGES */}
           <Text style={{ marginBottom: 6, color: COLORS.TXT }}>
             {trad[lang].common.chooseLanguage}:
           </Text>
           <View style={styles.langField}>
-            <View style={styles.flagRow}>
-              {languages.map((language, index) => {
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => storeLang(language.code)}
-                    style={
-                      lang === language.code
-                        ? { backgroundColor: COLORS.ACCENT, borderRadius: 6 }
-                        : null
-                    }
-                  >
-                    <Image style={styles.flag} source={language?.flag} />
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+            <FlatList
+              horizontal={true}
+              data={languages}
+              contentContainerStyle={styles.flagRow}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  onPress={() => storeLang(item.code)}
+                  style={
+                    lang === item.code
+                      ? { backgroundColor: COLORS.ACCENT, borderRadius: 6 }
+                      : null
+                  }
+                >
+                  <Image style={styles.flag} source={item?.flag} />
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+
+          {/* CLEAR DATA */}
+          <Text style={{ marginTop: 16, marginBottom: 6, color: COLORS.TXT }}>
+            Clear all saved palette data:
+          </Text>
+          <View style={styles.clearField}>
+            <Text
+              style={{
+                color: COLORS.WARNING,
+                fontWeight: "bold",
+                fontSize: 12,
+              }}
+            >
+              This action cannot be reversed!
+            </Text>
+
+            <IconBnt
+              icon="trash"
+              color={COLORS.TXT}
+              bgColor={COLORS.WARNING}
+              label="Clear data"
+              size={12}
+              onClick={() => clearData()}
+            />
           </View>
         </View>
       </View>
@@ -116,12 +150,12 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 16,
     marginTop: 8,
-    marginBottom: 64,
+    marginBottom: 96,
   },
 
   flag: {
-    width: 40,
-    height: 24,
+    width: 30,
+    height: 18,
     margin: 8,
   },
 
@@ -130,14 +164,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     display: "flex",
     alignItems: "center",
+    backgroundColor: COLORS.BG,
+    padding: 4,
+    borderRadius: 8,
+  },
+
+  clearField: {
+    width: "100%",
+    flexDirection: "row",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: COLORS.BG,
+    padding: 4,
+    paddingLeft: 12,
+    borderRadius: 8,
   },
 
   flagRow: {
     flexDirection: "row",
     display: "flex",
-    flexWrap: "wrap",
     alignItems: "center",
-    width: "100%",
-    marginHorizontal: 8,
+    gap: 4,
   },
 });

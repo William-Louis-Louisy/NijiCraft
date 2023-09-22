@@ -77,11 +77,5 @@ export const getColorHarmonies = (color: IColor) => {
       hex: hslToHex(tetradic2),
       rgb: handleStringifyColor(hslToRgb(tetradic2)),
     },
-    {
-      name: "tetradic3",
-      color: tetradic3,
-      hex: hslToHex(tetradic3),
-      rgb: handleStringifyColor(hslToRgb(tetradic3)),
-    },
   ];
 };

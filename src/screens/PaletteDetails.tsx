@@ -72,10 +72,7 @@ const PaletteDetails = ({ route }) => {
                   { color: determineTextColor(item.rgb) },
                 ]}
                 containerStyle={styles.dropdownContainer}
-                itemTextStyle={[
-                  styles.fontSize,
-                  { color: determineTextColor(item.rgb) },
-                ]}
+                itemTextStyle={[styles.fontSize, { color: COLORS.TXT }]}
                 selectedTextStyle={[
                   styles.fontSize,
                   { color: determineTextColor(item.rgb) },

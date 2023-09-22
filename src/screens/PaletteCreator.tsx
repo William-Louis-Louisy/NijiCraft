@@ -27,13 +27,13 @@ import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import { onChangeSavePalette } from "../utils/CRUD";
 
 const defaultColor = {
-  hex: "#000000",
-  rgb: "rgb(0, 0, 0)",
-  rgba: "rgba(0, 0, 0, 1)",
-  hsv: "hsv(0, 0, 0)",
-  hsva: "hsva(0, 0, 0, 1)",
-  hsl: "hsl(0, 0, 0)",
-  hsla: "hsla(0, 0, 0, 1)",
+  hex: "#469490",
+  rgb: "rgb(70, 148, 144)",
+  rgba: "rgba(70, 148, 144, 1)",
+  hsv: "hsv(177, 53%, 58%)",
+  hsva: "hsva(177, 53%, 58%, 1)",
+  hsl: "hsl(177, 36%, 43%)",
+  hsla: "hsla(177, 36%, 43%, 1)",
 };
 
 const defaultPalette: IPalette = {
@@ -48,7 +48,7 @@ const PaletteCreator = ({ route }) => {
     useState<IPalette>(defaultPalette);
   const [pickerType, setPickerType] = useState<string>("picker");
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedColorHex, setSelectedColorHex] = useState("#FF0000");
+  const [selectedColorHex, setSelectedColorHex] = useState(defaultColor.hex);
   const [selectedColor, setSelectedColor] = useState<IColor>(defaultColor);
   const [inputValue, setInputValue] = useState<string>(selectedColorHex);
   const pickerRef = useRef<ColorPickerRef>(null);
@@ -177,7 +177,7 @@ const PaletteCreator = ({ route }) => {
               style={styles.btn}
               onPress={() => setModalVisible(true)}
             >
-              <Ionicons name="eye" size={16} color={COLORS.TXT} />
+              <Ionicons name="eyedrop-outline" size={16} color={COLORS.TXT} />
               <Text style={{ color: COLORS.TXT }}>
                 {trad[lang].paletteCreator.picker}
               </Text>
